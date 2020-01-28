@@ -5,28 +5,32 @@ import java.util.Hashtable;
 
 public class Chess {
     static String board =
-            "          \n"+
-            "          \n"+
-            " rnbqkbnr \n"+
-            " pppppppp \n"+
-            " ........ \n"+
-            " ........ \n"+
-            " ........ \n"+
-            " ........ \n"+
-            " PPPPPPPP \n"+
-            " RNBQKBNR \n"+
-            "          \n"+
-            "          ";
+            "          \n"+ // 0 - 9
+            "          \n"+ // 10 - 19
+            " rnbqkbnr \n"+ // 20 - 29
+            " pppp.ppp \n"+ // 30 - 39
+            " ........ \n"+ // 40 - 49
+            " ....p... \n"+ // 50 - 59
+            " ........ \n"+ // 60 - 69
+            " .....N.. \n"+ // 70 - 79
+            " PPPPPPPP \n"+ // 80 - 89
+            " RNBQKB.R \n"+ // 90 - 99
+            "          \n"+ // 100 - 109
+            "          "; // 110 - 119
 
     //Himmeldirectionser
     static int N = -10;
     static int E = 1;
     static int S = 10;
     static int W = -1;
+
+    //Gjørneindekser
     static int A1 =  91;
     static int H1 = 98;
     static int A8 = 21;
     static int H8 = 28;
+    static Tuple initialWC = new Tuple(true, true);
+    static Tuple initialBC = new Tuple(true, true);
 
     static Dictionary<Character, int []> directions = new Hashtable();
 
@@ -37,21 +41,19 @@ public class Chess {
         directions.put('R', new int[] {N, E, S, W});
         directions.put('Q', new int[] {N, E, S, W, N+E, S+E, S+W, N+W});
         directions.put('K', new int[] {N, E, S, W, N+E, S+E, S+W, N+W});
-        Position P = new Position();
+        Position P = new Position(board, 0, initialWC, initialBC, true, true);
         P.gen_moves();
 
     }
-
-
-
-}
-
-class Tuple<X, Y> {
-    public final X x;
-    public final Y y;
-    public Tuple(X x, Y y) {
-        this.x = x;
-        this.y = y;
+    public static int parse(String c){
+        int fil = (int) c.charAt(0) - 'a';
+        int rank = c.charAt(1) - '1';
+        return A1 + fil - 10*rank;
     }
+    public static int rotinp(int i){
+        return 119-i;
+    }
+
+
 }
 
