@@ -2,6 +2,9 @@ package Chessbot2;
 
 import javax.imageio.stream.ImageInputStream;
 
+import static Chessbot2.Chess.A8;
+import static Chessbot2.Chess.H8;
+
 public class Position {
 
     static int score;
@@ -72,5 +75,55 @@ public class Position {
         }
         return new String(chars);
     }
-}
 
+    public static Position move(Tuple move){
+        /* Tar f. eks (85, 65) som input, ikke (e2, e4).
+        Returnerer ett nytt brett, der trekket er blitt gjort.
+         */
+        int fra = (int) move.getX();
+        int til = (int) move.getY();
+        char piece = board.charAt(fra);
+
+        // score = score + value(move);
+        // TODO: 29.01.2020 lag Value()
+
+        //Flytter brikken
+        StringBuilder newboard = new StringBuilder(board);
+        newboard.setCharAt(til, piece);
+        newboard.setCharAt(fra, '.');
+
+        //Oppdaterer rokadebetingelser
+        if(fra == 91) wc.setX(false);
+        if(fra == 98) wc.setY(false);
+        if(fra == 21) bc.setX(false);
+        if(fra == 28) bc.setY(false);
+
+        //Rokerer
+        if (piece == 'K'){
+            if(til == 97){
+                newboard.setCharAt(98, '.');
+                newboard.setCharAt(96, 'R');
+            }
+            if(til == 92){
+                newboard.setCharAt(91, '.');
+                newboard.setCharAt(93, 'R');
+            }
+            // TODO: 29.01.2020 Logikk som sjekker om svart eller hvit flytter.
+            //  Nå kan ikke hvit rokere etter svart
+            wc.setX(false);
+            wc.setY(false);
+        }
+        if (piece == 'P'){
+            // TODO: 29.01.2020 En passant, og at spilleren skal få velge hvilken brikke han vil ha
+            if(til <= H8){
+                newboard.setCharAt(til, 'Q');
+            }
+        }
+
+
+
+        return new Position(newboard.toString(), score, wc, bc, kp, ep);
+
+    }
+
+}

@@ -5,18 +5,18 @@ import java.util.Hashtable;
 
 public class Chess {
     static String board =
-            "          \n"+ // 0 - 9
-            "          \n"+ // 10 - 19
-            " rnbqkbnr \n"+ // 20 - 29
-            " pppp.ppp \n"+ // 30 - 39
-            " ........ \n"+ // 40 - 49
-            " ....p... \n"+ // 50 - 59
-            " ........ \n"+ // 60 - 69
-            " .....N.. \n"+ // 70 - 79
-            " PPPPPPPP \n"+ // 80 - 89
-            " RNBQKB.R \n"+ // 90 - 99
-            "          \n"+ // 100 - 109
-            "          "; // 110 - 119
+            "         \n"+ // 1 - 8
+            "         \n"+ // 11 - 18
+            " rnbqkbnr\n"+ // 21 - 28
+            " pppppppp\n"+ // 31 - 38
+            " ........\n"+ // 41 - 48
+            " ........\n"+ // 51 - 58
+            " ........\n"+ // 61 - 68
+            " ........\n"+ // 71 - 78
+            " PPPPPPPP\n"+ // 81 - 88
+            " RNBQKBNR\n"+ // 91 - 98
+            "         \n"+ // 101 - 108
+            "         ";   // 111 - 118
 
     //Himmeldirectionser
     static int N = -10;
@@ -44,12 +44,17 @@ public class Chess {
         directions.put('K', new int[] {N, E, S, W, N+E, S+E, S+W, N+W});
         Position P = new Position(board, 0, WC, BC, true, true);
         System.out.println(board);
-        System.out.println(P.rotate().board);
+
+
+
 
 
     }
     public static int parse(String c){
-        // Konverterer poisjonen på brettet fra bokstav+tall til kun tall. f. eks. e2 blir 85.
+        /* Konverterer poisjonen på brettet fra bokstav+tall til kun tall. f. eks. e2 blir 85.
+        Planen er at kun Chess får se syntakser som e2e4,
+        og den konverterer slikt til tall før den sender det til Position og Searcher.
+         */
         int fil = (int) c.charAt(0) - 'a';
         int rank = c.charAt(1) - '1';
         return A1 + fil - 10*rank;
