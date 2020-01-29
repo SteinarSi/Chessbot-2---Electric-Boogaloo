@@ -10,8 +10,8 @@ class Tuple<X, Y> {
         this.x = x;
         this.y = y;
     }
-    public Object getX() { return this.x; }
-    public Object getY() { return this.y; }
+    public X getX() { return this.x; }
+    public Y getY() { return this.y; }
 
     public void setX(Object x) { this.x = (X) x; }
     public void setY(Object y) { this.y = (Y) y; }
