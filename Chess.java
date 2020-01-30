@@ -1,5 +1,6 @@
 package Chessbot2;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Scanner;
 
@@ -39,6 +40,8 @@ public class Chess {
     static boolean gjorttrekk = false;
 
     public static void main(String[] args) {
+        // TODO: 30.01.2020 Bug: når det er svart sin tur, er indeksen til alle brikkene forskyvet ett hakk.
+        //  Så man må skrive A2 for å kalle på på B2-bonden, for eksempel. Fiks!
         Scanner scanner = new Scanner(System.in);
         Position P = new Position(board, 0, WC, BC, true, true);
         System.out.println(board);
@@ -51,19 +54,17 @@ public class Chess {
                 System.out.println("Ditt trekk: ");
                 String input = scanner.nextLine();
                 if (input.equals("quit")){
-                    play = false;
+                    scanner.close();
                     break outer;
                 }
                 Tuple<Integer, Integer> trekk = parse(input);
-                P.gen_player_moves(trekk);
-                if (lovlig) {
+                if (P.gen_player_moves(trekk)) {
                     nyttbrett = P.move(trekk);
                     gjorttrekk = true;
                 } else System.out.println("Ulovlig trekk. Prøv igjen.");
             }
             P = nyttbrett.rotate();
             System.out.println(P.board);
-
         }
     }
     public static Tuple<Integer, Integer> parse(String c){

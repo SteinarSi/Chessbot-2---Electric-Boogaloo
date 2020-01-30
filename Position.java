@@ -18,7 +18,7 @@ public class Position {
     static boolean kp;
     static String board;
 
-    public Position(String board, int score, Tuple WC, Tuple BC, Boolean ep, Boolean kp){
+    public Position(String board, int score, Tuple WC, Tuple BC, Boolean ep, Boolean kp) {
         Position.board = board;
         Position.score = score;
         Position.WC = WC;
@@ -26,10 +26,12 @@ public class Position {
         Position.ep = ep;
         Position.kp = kp;
     }
-    public void gen_player_moves(Tuple trekk) {
-        // TODO: 28.01.2020 Fiks rokader, en passant, yield
+
+    public boolean gen_player_moves(Tuple trekk) {
+        // TODO: 28.01.2020 En passant, yield
         /* Går igjennom alle brikkene til spilleren, og finner hvilke lovlige trekk hver enkelt brikke har.
         Oppretter en liste over lovlige trekk, og sjekker så om noen av disse samsvarer med trekket spilleren hadde lyst til å gjøre.
+        Returnerer true/false.
          */
         ArrayList<Tuple> lovligeliste = new ArrayList<>();
         for (int fra = 0; fra < board.length(); fra++) {
@@ -38,19 +40,65 @@ public class Position {
                 continue;
             }
             //Sjekker om rokering er lovlig, legger det til i listen
-            if(black) {
+            if (black) {
                 if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
-                    lovligeliste.add(new Tuple(95, 93)); //Svart rokerer langt
+                    if (trekk.equals(new Tuple(95, 93))) return true; //Svart rokerer langt
                 }
                 if ((brikke == 'K' && (boolean) BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
-                    lovligeliste.add(new Tuple(95, 97)); //Svart rokerer kort
+                    if (trekk.equals(new Tuple(95, 97))) return true; //Svart rokerer kort
                 }
             } else {
                 if ((brikke == 'K' && (boolean) WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
-                    lovligeliste.add(new Tuple(95, 93)); //Hvit rokerer langt
+                    if (trekk.equals(new Tuple(95, 93))) return true; //Hvit rokerer langt
                 }
                 if ((brikke == 'K' && (boolean) WC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
-                    lovligeliste.add(new Tuple(95, 97)); //Hvit rokerer kort
+                    if (trekk.equals(new Tuple(95, 97))) return true; //Hvit rokerer kort
+                }
+            }
+            //Legger til alle normale trekk
+            for (int retning : directions.get(brikke)) {
+                for (int til = fra + retning; true; til += retning) {
+                    char mål = board.charAt(til);
+
+                    if (Character.isUpperCase(mål) || Character.isWhitespace(mål))
+                        break; //Om brikken prøver å ta en vennlig brikke, eller prøver å gå av brettet
+
+                    if (brikke == 'P') {
+                        if ((retning == N || retning == N * 2) && mål != '.') break;
+                        if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
+                        if ((retning == N + E || retning == N + W) && mål == '.') break;
+                    }
+                    if (trekk.equals(new Tuple(fra, til))) return true;
+                    if (brikke == 'P' || brikke == 'N' || brikke == 'K' || Character.isLowerCase(mål)) break;
+                }
+            }
+        }
+        return false;
+    }
+    public ArrayList<Tuple<Integer, Integer>> gen_bot_moves(){
+        /* En funksjon som genererer en Array av lovlige trekk en spiller har lov til å gjøre.
+        Laget med hensyn på en bot, vi kan senere implementere noe yield-shit istedenfor lister.
+         */
+        ArrayList<Tuple<Integer, Integer>> lovligliste = new ArrayList<>();
+        for (int fra = 0; fra < board.length(); fra++) {
+            char brikke = board.charAt(fra);
+            if (!Character.isUpperCase(brikke)) {
+                continue;
+            }
+            //Sjekker om rokering er lovlig, legger det til i listen
+            if(black) {
+                if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
+                    lovligliste.add(new Tuple(95, 93)); //Svart rokerer langt
+                }
+                if ((brikke == 'K' && (boolean) BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
+                    lovligliste.add(new Tuple(95, 97)); //Svart rokerer kort
+                }
+            } else {
+                if ((brikke == 'K' && (boolean) WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
+                    lovligliste.add(new Tuple(95, 93)); //Hvit rokerer langt
+                }
+                if ((brikke == 'K' && (boolean) WC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
+                    lovligliste.add(new Tuple(95, 97)); //Hvit rokerer kort
                 }
             }
             //Legger til alle normale trekk
@@ -65,15 +113,16 @@ public class Position {
                         if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
                         if ((retning == N + E || retning == N + W) && mål == '.') break;
                     }
-                    lovligeliste.add(new Tuple(fra, til));
+                    lovligliste.add(new Tuple(fra, til));
+
+                    //Om brikken bare kan flyttet et steg om gangen, vil dette bryte loopen etter det steget er lagt til.
                     if (brikke == 'P' || brikke == 'N' || brikke == 'K' || Character.isLowerCase(mål)) break;
                 }
             }
         }
-        for (int i = 0; i<lovligeliste.size(); i++){
-            if(trekk.equals(lovligeliste.get(i))) lovlig = true;
-        }
+        return lovligliste;
     }
+
     public Position rotate(){
         /* Flipper brettet helt rundt, og inverterer casen til alle bokstavene.
         Returnerer et nytt brett.
