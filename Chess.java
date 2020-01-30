@@ -1,7 +1,5 @@
 package Chessbot2;
 
-import javafx.geometry.Pos;
-
 import java.util.Dictionary;
 import java.util.Scanner;
 
@@ -34,7 +32,7 @@ public class Chess {
     static Tuple BC = new Tuple(true, true);
     public static Dictionary<Character, Integer[]> pst = Generator.makePst();
     public static Dictionary<Character, Integer[]> directions = Generator.makeDirections();
-    //Hvem som spiller
+
     static boolean black = false;
     static boolean play = true;
     static boolean lovlig = false;
@@ -44,7 +42,7 @@ public class Chess {
         Scanner scanner = new Scanner(System.in);
         Position P = new Position(board, 0, WC, BC, true, true);
         System.out.println(board);
-        while(play) {
+        outer: while(play) {
             lovlig = false;
             gjorttrekk = false;
 
@@ -54,10 +52,10 @@ public class Chess {
                 String input = scanner.nextLine();
                 if (input.equals("quit")){
                     play = false;
-                    break;
+                    break outer;
                 }
                 Tuple<Integer, Integer> trekk = parse(input);
-                P.gen_moves(trekk);
+                P.gen_player_moves(trekk);
                 if (lovlig) {
                     nyttbrett = P.move(trekk);
                     gjorttrekk = true;
@@ -65,8 +63,6 @@ public class Chess {
             }
             P = nyttbrett.rotate();
             System.out.println(P.board);
-
-
 
         }
     }
@@ -85,9 +81,5 @@ public class Chess {
         int y = A1 + filftil - 10*ranktil;
         return new Tuple<>(x, y);
     }
-    public static int rotinp(int i){
-        return 119-i;
-    }
-
 }
 

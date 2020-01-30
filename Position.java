@@ -26,36 +26,52 @@ public class Position {
         Position.ep = ep;
         Position.kp = kp;
     }
-    public void/*Tuple<Integer, Integer>*/ gen_moves(Tuple trekk) {
+    public void gen_player_moves(Tuple trekk) {
         // TODO: 28.01.2020 Fiks rokader, en passant, yield
-        /* Går igjennom alle brikkene til spilleren som skal flytte, og finner hvilke lovlige trekk hver enkelt brikke har.
-        Hvis det er et menneske som skal flytte tar den det potensielle trekket som input,
-        og sjekker om det trekket er lovlig. Hvis ja, endrer den Chess.lovlig til true, så trekket blir gjort.
-        For nå bare printer den trekket, men planen er å få den til å kontinuerlig sende disse trekkene til Searcher(),
-        så den kan vurdere trekk samtidig som den finner nye trekk.
+        /* Går igjennom alle brikkene til spilleren, og finner hvilke lovlige trekk hver enkelt brikke har.
+        Oppretter en liste over lovlige trekk, og sjekker så om noen av disse samsvarer med trekket spilleren hadde lyst til å gjøre.
          */
-        for (int i = 0; i < board.length(); i++) {
-            char p = board.charAt(i);
-            if (!Character.isUpperCase(p)) {
+        ArrayList<Tuple> lovligeliste = new ArrayList<>();
+        for (int fra = 0; fra < board.length(); fra++) {
+            char brikke = board.charAt(fra);
+            if (!Character.isUpperCase(brikke)) {
                 continue;
             }
-            for (int d : directions.get(p)) {
-                for (int a = i + d; true; a += d) {
-                    char q = board.charAt(a);
-
-                    if (Character.isUpperCase(q) || Character.isWhitespace(q)) break; //Om brikken prøver å ta en vennlig brikke, eller prøver å gå av brettet
-
-                    if (p == 'P') {
-                        if ((d == N || d == N * 2) && q != '.') break;
-                        if (d == N * 2 && (i < A1 + N || board.charAt(N + i) != '.')) break;
-                        if ((d == N + E || d == N + W) && q == '.') break;
-                    }
-                    if(trekk.equals(new Tuple(i, a))) lovlig = true; //Om det genererte trekket er lik trekket spilleren har lyst til å gjøre
-
-                    //System.out.println(i + " til " + a);
-                    if (p == 'P' || p == 'N' || p == 'K' || Character.isLowerCase(q)) break;
+            //Sjekker om rokering er lovlig, legger det til i listen
+            if(black) {
+                if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
+                    lovligeliste.add(new Tuple(95, 93)); //Svart rokerer langt
+                }
+                if ((brikke == 'K' && (boolean) BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
+                    lovligeliste.add(new Tuple(95, 97)); //Svart rokerer kort
+                }
+            } else {
+                if ((brikke == 'K' && (boolean) WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
+                    lovligeliste.add(new Tuple(95, 93)); //Hvit rokerer langt
+                }
+                if ((brikke == 'K' && (boolean) WC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
+                    lovligeliste.add(new Tuple(95, 97)); //Hvit rokerer kort
                 }
             }
+            //Legger til alle normale trekk
+            for (int retning : directions.get(brikke)) {
+                for (int til = fra + retning; true; til += retning) {
+                    char mål = board.charAt(til);
+
+                    if (Character.isUpperCase(mål) || Character.isWhitespace(mål)) break; //Om brikken prøver å ta en vennlig brikke, eller prøver å gå av brettet
+
+                    if (brikke == 'P') {
+                        if ((retning == N || retning == N * 2) && mål != '.') break;
+                        if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
+                        if ((retning == N + E || retning == N + W) && mål == '.') break;
+                    }
+                    lovligeliste.add(new Tuple(fra, til));
+                    if (brikke == 'P' || brikke == 'N' || brikke == 'K' || Character.isLowerCase(mål)) break;
+                }
+            }
+        }
+        for (int i = 0; i<lovligeliste.size(); i++){
+            if(trekk.equals(lovligeliste.get(i))) lovlig = true;
         }
     }
     public Position rotate(){
@@ -102,11 +118,13 @@ public class Position {
         newboard.setCharAt(fra, '.');
 
         //Oppdaterer rokadebetingelser
-        if(fra == 91) WC.setX(false);
-        if(fra == 98) WC.setY(false);
-        if(fra == 21) BC.setX(false);
-        if(fra == 28) BC.setY(false);
-
+        if (black){
+            if(fra == 21) BC.setX(false);
+            if(fra == 28) BC.setY(false);
+        } else{
+            if(fra == 91) WC.setX(false);
+            if(fra == 98) WC.setY(false);
+        }
         //Rokerer
         if (brikke == 'K'){
             if(Chess.black) BC = new Tuple(false, false);

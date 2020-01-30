@@ -1,7 +1,6 @@
 package Chessbot2;
 
 import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.Hashtable;
 
 public class Generator {
@@ -107,3 +106,4 @@ public class Generator {
     }
 
 }
+
