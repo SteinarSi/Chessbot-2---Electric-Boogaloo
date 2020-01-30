@@ -1,9 +1,11 @@
 package Chessbot2;
 
+import javafx.geometry.Pos;
+
 import java.util.Dictionary;
 import java.util.Scanner;
 
-public class Chess<pst> {
+public class Chess {
     static String board =
     "         \n"+ // 1 - 8
     "         \n"+ // 11 - 18
@@ -31,44 +33,57 @@ public class Chess<pst> {
     static Tuple WC = new Tuple(true, true);
     static Tuple BC = new Tuple(true, true);
     public static Dictionary<Character, Integer[]> pst = Generator.makePst();
-    public static Dictionary<Character, Integer[]> directions;
+    public static Dictionary<Character, Integer[]> directions = Generator.makeDirections();
     //Hvem som spiller
     static boolean black = false;
     static boolean play = true;
+    static boolean lovlig = false;
+    static boolean gjorttrekk = false;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Dictionary<Character, Integer[]> directions = Generator.makeDirections();
         Position P = new Position(board, 0, WC, BC, true, true);
         System.out.println(board);
-        while(play){
-            System.out.println("Ditt trekk: ");
-            String input = scanner.nextLine();
-            if(input.equals("quit")) break;
+        while(play) {
+            lovlig = false;
+            gjorttrekk = false;
 
-            System.out.println(P.move(parse(input)).board);
-
-
+            Position nyttbrett = null;
+            while (!gjorttrekk) {
+                System.out.println("Ditt trekk: ");
+                String input = scanner.nextLine();
+                if (input.equals("quit")){
+                    play = false;
+                    break;
+                }
+                Tuple<Integer, Integer> trekk = parse(input);
+                P.gen_moves(trekk);
+                if (lovlig) {
+                    nyttbrett = P.move(trekk);
+                    gjorttrekk = true;
+                } else System.out.println("Ulovlig trekk. Prøv igjen.");
+            }
+            P = nyttbrett.rotate();
+            System.out.println(P.board);
 
 
 
         }
     }
     public static Tuple<Integer, Integer> parse(String c){
-        /* Konverterer posisjonen på brettet fra bokstav+tall til kun tall. f. eks. e2 blir 85.
+        /* Konverterer posisjonen på brettet fra bokstav+tall til kun en tuppel av tall.
+        f. eks. "e2 e4" blir Tuple(85, 65).
         Planen er at kun Chess får se syntakser som e2e4,
         og den konverterer slikt til tall før den sender det til Position og Searcher.
          */
-
         c = c.replaceAll("\\s", "");
-
         int filfra = (int) c.charAt(0) - 'a';
         int rankfra = c.charAt(1) - '1';
         int x = A1 + filfra - 10*rankfra;
         int filftil = (int) c.charAt(2) - 'a';
         int ranktil = c.charAt(3) - '1';
         int y = A1 + filftil - 10*ranktil;
-        return new Tuple<Integer, Integer>(x, y);
+        return new Tuple<>(x, y);
     }
     public static int rotinp(int i){
         return 119-i;

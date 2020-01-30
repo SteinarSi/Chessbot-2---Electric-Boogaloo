@@ -11,17 +11,16 @@ public class Generator {
     static int W = -1;
 
     public static Dictionary makeDirections(){
-        Dictionary directions =  new Hashtable();
+        Dictionary<Character, Integer[]> directions =  new Hashtable();
         //Oppretter en dict med alle himmelretningene hver enkelt brikke kan bevege seg.
-        directions.put('P', new int[] {N, N+N, N+W, N+E});
-        directions.put('N', new int[] {N+N+W, E+N+E, E+S+E, S+S+E, S+S+W, W+S+W, W+N+W, N+N+W});
-        directions.put('B', new int[] {N+E, S+E, S+W, N+W});
-        directions.put('R', new int[] {N, E, S, W});
-        directions.put('Q', new int[] {N, E, S, W, N+E, S+E, S+W, N+W});
-        directions.put('K', new int[] {N, E, S, W, N+E, S+E, S+W, N+W});
+        directions.put('P', new Integer[] {N, N+N, N+W, N+E});
+        directions.put('N', new Integer[] {N+N+W, E+N+E, E+S+E, S+S+E, S+S+W, W+S+W, W+N+W, N+N+E});
+        directions.put('B', new Integer[] {N+E, S+E, S+W, N+W});
+        directions.put('R', new Integer[] {N, E, S, W});
+        directions.put('Q', new Integer[] {N, E, S, W, N+E, S+E, S+W, N+W});
+        directions.put('K', new Integer[] {N, E, S, W, N+E, S+E, S+W, N+W});
         return directions;
     }
-
     public static Dictionary<Character, Integer[]> makePst(){
         Dictionary<Character, Integer[]> pst = new Hashtable();
         pst.put('P', new Integer[] {
@@ -29,7 +28,7 @@ public class Generator {
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0,
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0,
                 0,  78,  83,  86,  73, 102,  82,  85,  90, 0,
-                0,  7,  29,  21,  44,  40,  31,  44,   7, 0,
+                0,   7,  29,  21,  44,  40,  31,  44,   7, 0,
                 0, -17,  16,  -2,  15,  14,   0,  15, -13, 0,
                 0, -26,   3,  10,   9,   6,   1,   0, -23, 0,
                 0, -22,   9,   5, -11, -10,  -2,   3, -19, 0,
@@ -103,10 +102,6 @@ public class Generator {
                 0, 17,  30,  -3, -14,   6,  -1,  40,  18, 0,
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0,
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0});
-
-        for (char key : "KQNBRP".toCharArray()){
-            System.out.println(pst.get(key)[82]);
-        }
 
         return pst;
     }

@@ -15,4 +15,13 @@ class Tuple<X, Y> {
 
     public void setX(Object x) { this.x = (X) x; }
     public void setY(Object y) { this.y = (Y) y; }
+
+    public String toString(){
+        return "(" + this.x + ", " + this.y + ")";
+    }
+    public boolean equals(Tuple obj){
+        return (this.x == obj.getX() && this.y == obj.getY());
+    }
 }
+
+
