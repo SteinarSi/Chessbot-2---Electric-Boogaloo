@@ -28,7 +28,7 @@ public class Position {
     }
 
     public boolean gen_player_moves(Tuple trekk) {
-        // TODO: 28.01.2020 En passant, yield
+        // TODO: 28.01.2020 En passant
         /* Går igjennom alle brikkene til spilleren, og finner hvilke lovlige trekk hver enkelt brikke har.
         Oppretter en liste over lovlige trekk, og sjekker så om noen av disse samsvarer med trekket spilleren hadde lyst til å gjøre.
         Returnerer true/false.
@@ -68,7 +68,10 @@ public class Position {
                         if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
                         if ((retning == N + E || retning == N + W) && mål == '.') break;
                     }
+                    //Om det genererte trekket har kommet helt hit uten å bli brutt,
+                    // og det er det samme som det trekket spilleren prøvde, er spillerens trekk offisielt et lovlig et.
                     if (trekk.equals(new Tuple(fra, til))) return true;
+
                     if (brikke == 'P' || brikke == 'N' || brikke == 'K' || Character.isLowerCase(mål)) break;
                 }
             }
@@ -76,6 +79,7 @@ public class Position {
         return false;
     }
     public ArrayList<Tuple<Integer, Integer>> gen_bot_moves(){
+        // TODO: 30.01.2020 En passant, og yield
         /* En funksjon som genererer en Array av lovlige trekk en spiller har lov til å gjøre.
         Laget med hensyn på en bot, vi kan senere implementere noe yield-shit istedenfor lister.
          */
@@ -106,13 +110,16 @@ public class Position {
                 for (int til = fra + retning; true; til += retning) {
                     char mål = board.charAt(til);
 
-                    if (Character.isUpperCase(mål) || Character.isWhitespace(mål)) break; //Om brikken prøver å ta en vennlig brikke, eller prøver å gå av brettet
+                    //Om brikken prøver å ta en vennlig brikke, eller prøver å gå av brettet
+                    if (Character.isUpperCase(mål) || Character.isWhitespace(mål)) break;
 
+                    //Bondelogikk. Sørger for at bønder ikke kan ta noe framlengs, at de kun kan gå ett eller to skritt om gangen(og ikke 7, som dronningen).
                     if (brikke == 'P') {
                         if ((retning == N || retning == N * 2) && mål != '.') break;
                         if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
                         if ((retning == N + E || retning == N + W) && mål == '.') break;
                     }
+                    //Om det genererte trekket har kommet helt ned hit uten å bli brutt, er det offisielt et lovlig trekk, som botten må inspisere.
                     lovligliste.add(new Tuple(fra, til));
 
                     //Om brikken bare kan flyttet et steg om gangen, vil dette bryte loopen etter det steget er lagt til.
@@ -214,9 +221,7 @@ public class Position {
 
         int deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
 
-        if(Character.isLowerCase(dreptbrikke)){
-            deltascore += pst.get(Character.toUpperCase(dreptbrikke))[119-til];
-        }
+        if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[119-til];
         if (brikke == 'P')
             if (til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til];
         // TODO: 29.01.2020 Passantlogikk
