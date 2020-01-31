@@ -8,18 +8,18 @@ import static Chessbot2.Chess.*;
 public class Position {
     /* Brettet.
     Dette objektet husker hvor alle brikkene står,
-    hvem som har lov til å rokerer hvor, og om det er lov til å ta en passant.
+    hvem som har lov til å rokere hvor, og hvor det er lov til å ta en passant.
     I tillegg har den funksjoner for å flytte brikker(og dermed opprette ett nytt brett med de nye posisjonene),
     generere lister over alle lovlige trekk, og å rotere brettet helt rundt.
      */
+    static String board;
     static int score;
     static Tuple WC;
     static Tuple BC;
-    static boolean ep;
+    static int ep;
     static boolean kp;
-    static String board;
 
-    public Position(String board, int score, Tuple WC, Tuple BC, Boolean ep, Boolean kp) {
+    public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean kp) {
         Position.board = board;
         Position.score = score;
         Position.WC = WC;
@@ -29,12 +29,10 @@ public class Position {
     }
 
     public boolean gen_player_moves(Tuple trekk) {
-        // TODO: 28.01.2020 En passant
         /* Går igjennom alle brikkene til spilleren, og finner hvilke lovlige trekk hver enkelt brikke har.
         Oppretter en liste over lovlige trekk, og sjekker så om noen av disse samsvarer med trekket spilleren hadde lyst til å gjøre.
         Returnerer true/false.
          */
-        ArrayList<Tuple> lovligeliste = new ArrayList<>();
         for (int fra = 0; fra < board.length(); fra++) {
             char brikke = board.charAt(fra);
             if (!Character.isUpperCase(brikke)) {
@@ -67,9 +65,9 @@ public class Position {
                     if (brikke == 'P') {
                         if ((retning == N || retning == N * 2) && mål != '.') break;
                         if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
-                        if ((retning == N + E || retning == N + W) && mål == '.') break;
+                        if ((retning == N + E || retning == N + W) && mål == '.' && til != ep) break; //Om bonden prøver å gå skrått, og det ikke er mulig å ta en passant der.
                     }
-                    //Om det genererte trekket har kommet helt hit uten å bli brutt,
+                    // Om det genererte trekket har kommet helt hit uten å bli brutt,
                     // og det er det samme som det trekket spilleren prøvde, er spillerens trekk offisielt et lovlig et.
                     if (trekk.equals(new Tuple(fra, til))) return true;
 
@@ -80,7 +78,7 @@ public class Position {
         return false;
     }
     public ArrayList<Tuple<Integer, Integer>> gen_bot_moves(){
-        // TODO: 30.01.2020 En passant, og yield
+        // TODO: 30.01.2020 Yield
         /* En funksjon som genererer en Array av lovlige trekk en spiller har lov til å gjøre.
         Laget med hensyn på en bot, vi kan senere implementere noe yield-shit istedenfor lister.
          */
@@ -118,7 +116,7 @@ public class Position {
                     if (brikke == 'P') {
                         if ((retning == N || retning == N * 2) && mål != '.') break;
                         if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
-                        if ((retning == N + E || retning == N + W) && mål == '.') break;
+                        if ((retning == N + E || retning == N + W) && mål == '.' && til != ep) break;  //Om bonden prøver å gå skrått, og det ikke er mulig å ta en passant der.
                     }
                     //Om det genererte trekket har kommet helt ned hit uten å bli brutt, er det offisielt et lovlig trekk, som botten må inspisere.
                     lovligliste.add(new Tuple(fra, til));
@@ -145,6 +143,7 @@ public class Position {
     }
     public static String reverseCase(char[] chars) {
         /* Går igjennom hele listen med bokstaver, og inverterer casen til alle bokstavene.
+        Returnerer en streng med de inverterte bokstavene, altså ikke en liste.
          */
         for (int i = 0; i < chars.length; i++) {
             char c = chars[i];
@@ -187,34 +186,44 @@ public class Position {
             if(Chess.black) BC = new Tuple(false, false);
             else WC = new Tuple(false, false);
 
-            if(til == 97){
+            if(til == 97){ //Flytter tårnet om du rokerer kort.
                 newboard.setCharAt(98, '.');
                 newboard.setCharAt(96, 'R');
                 score += value(new Tuple(98, 96));
             }
-            if(til == 92){
+            if(til == 92){ //Flytter tårnet om du rokerer langt.
                 newboard.setCharAt(91, '.');
                 newboard.setCharAt(93, 'R');
                 score += value(new Tuple(91, 93));
             }
         }
-        //Promoterer bønder
-        if (brikke == 'P' && til <= H8 && til >= A8){
-            if(spillerstur){ //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
-                boolean promotert = false;
-                System.out.println("Hvilken brikke vil du promotere til? Q/N/B/R ");
-                Scanner scanner = new Scanner(System.in);
-                while(!promotert) {
-                    char nybrikke = scanner.next().charAt(0);
-                    if (nybrikke == 'Q' || nybrikke == 'N' || nybrikke == 'B' || nybrikke == 'R'){
-                        newboard.setCharAt(til, nybrikke);
-                        promotert = true;
-                    } else System.out.println("Prøv igjen. Husket du stor bokstav?");
-                }
-            } else //For botten er det ingen vits i å sjekke hva som er best, så han bare får en dronning uansett.
-                newboard.setCharAt(til, 'Q');
+        if(brikke == 'P') {
+            if (til - fra == 2 * N) {
+                ep = 119 - (fra + N); //Lagrer hvor det er greit å ta en passant
+                TeP = 2; //Hvor mange trekk som kan gjøres før denne passenten ikke lenger er gyldig. TeP reduserer med 1 for hvert trekk.
+            }
+            if (til == ep) newboard.setCharAt(ep + S, '.'); //Drepper den passerte bonden i forbifarten
+            if (til <= H8 && til >= A8) {
+                if (spillerstur) { //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
+                    boolean promotert = false;
+                    System.out.println("Hvilken brikke vil du promotere til? Q/N/B/R ");
+                    Scanner scanner = new Scanner(System.in);
+                    while (!promotert) {
+                        char nybrikke = scanner.next().charAt(0);
+                        if (nybrikke == 'Q' || nybrikke == 'N' || nybrikke == 'B' || nybrikke == 'R') {
+                            newboard.setCharAt(til, nybrikke);
+                            promotert = true;
+                        } else System.err.println("Prøv igjen. Husket du stor bokstav?");
+                    }
+                } else //For botten er det ingen vits i å sjekke hva som er best, så han bare får en dronning uansett. #Stalemeta
+                    newboard.setCharAt(til, 'Q');
+            }
         }
-        return new Position(newboard.toString(), score, WC, BC, kp, ep);
+        if(ep > 0){ //Om passant er lovlig, et eller annet sted
+            TeP -= 1;
+            if(TeP == 0) ep = 0; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
+        }
+        return new Position(newboard.toString(), score, WC, BC, ep, kp);
     }
 
     public static int value(Tuple<Integer, Integer> move) {
@@ -231,11 +240,13 @@ public class Position {
 
         int deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
 
-        if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[119-til];
-        if (brikke == 'P')
-            if (til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til];
-        // TODO: 29.01.2020 Passantlogikk
+        if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til];
 
+        if (brikke == 'P')
+            if (til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til]; //Ekstra score om du får en dronning.
+            if (til == ep) {
+                deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
+            }
         return deltascore;
     }
 }
