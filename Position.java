@@ -1,6 +1,7 @@
 package Chessbot2;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static Chessbot2.Chess.*;
 
@@ -197,12 +198,21 @@ public class Position {
                 score += value(new Tuple(91, 93));
             }
         }
-        //Promoterer bønder, eventuelt en passant
-        if (brikke == 'P'){
-            // TODO: 29.01.2020 En passant, og at spilleren skal få velge hvilken brikke han vil promotere til
-            if(til <= H8 && til >= A8){
+        //Promoterer bønder
+        if (brikke == 'P' && til <= H8 && til >= A8){
+            if(spillerstur){ //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
+                boolean promotert = false;
+                System.out.println("Hvilken brikke vil du promotere til? Q/N/B/R ");
+                Scanner scanner = new Scanner(System.in);
+                while(!promotert) {
+                    char nybrikke = scanner.next().charAt(0);
+                    if (nybrikke == 'Q' || nybrikke == 'N' || nybrikke == 'B' || nybrikke == 'R'){
+                        newboard.setCharAt(til, nybrikke);
+                        promotert = true;
+                    } else System.out.println("Prøv igjen. Husket du stor bokstav?");
+                }
+            } else //For botten er det ingen vits i å sjekke hva som er best, så han bare får en dronning uansett.
                 newboard.setCharAt(til, 'Q');
-            }
         }
         return new Position(newboard.toString(), score, WC, BC, kp, ep);
     }
