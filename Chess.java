@@ -1,5 +1,4 @@
 package Chessbot2;
-
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Scanner;
@@ -34,6 +33,8 @@ public class Chess {
     //Genererer dicter for brettverdier og himmelretningene til hver enkelt brikke
     public static Dictionary<Character, Integer[]> pst = Generator.makePst();
     public static Dictionary<Character, Integer[]> directions = Generator.makeDirections();
+    public static ArrayList<Character> bokstaver = Generator.checkCharacter();
+    public static ArrayList<Character> tall = Generator.checkInteger();
 
     static boolean black = false;
     static boolean play = true;
@@ -58,18 +59,16 @@ public class Chess {
                     scanner.close();
                     break outer;
                 }
-
-
-
-                Tuple<Integer, Integer> trekk = parse(input);
-                if (P.gen_player_moves(trekk)) {
-                    P = P.move(trekk);
-                    gjorttrekk = true;
-                } else System.err.println("Ulovlig trekk. Prøv igjen.");
+                if (IsAMove(input)){
+                    Tuple<Integer, Integer> trekk = parse(input);
+                    if (P.gen_player_moves(trekk)) {
+                        P = P.move(trekk);
+                        gjorttrekk = true;
+                    } else System.err.println("Ulovlig trekk. Prøv igjen.");
+                } else System.out.println("Forstår ikke. Prøv bokstaver fra a-h, og tall fra 1-8, i rekkefølgen bokstav tall bokstav tall.");
             }
             P = P.rotate();
             System.out.println(P.board);
-
         }
     }
     public static Tuple<Integer, Integer> parse(String c){
@@ -90,14 +89,16 @@ public class Chess {
     }
     public static boolean IsAMove(String input){
         /* En funskjon for å sjekke om spilleren skrev noe som kan tolkes som et trekk eller ikke. 
-        "e2 e4" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
+        "e2e4" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
           */
-        // TODO: 31.01.2020 Skriv ferdig denne 
-        Character første = input.charAt(0);
-        Character andre = input.charAt(1);
-        Character tredje = input.charAt(2);
-        Character fjerde = input.charAt(3);
-        return true;
+        input = input.replaceAll(" ", "");
+        if (input.length() >= 4) {
+            Character første = input.charAt(0);
+            Character andre = input.charAt(1);
+            Character tredje = input.charAt(2);
+            Character fjerde = input.charAt(3);
+            return(bokstaver.contains(første) && tall.contains(andre) && bokstaver.contains(tredje) && tall.contains(fjerde));
+        } else return false;
     }
 }
 

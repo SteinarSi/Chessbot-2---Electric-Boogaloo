@@ -200,7 +200,7 @@ public class Position {
         if(brikke == 'P') {
             if (til - fra == 2 * N) {
                 ep = 119 - (fra + N); //Lagrer hvor det er greit å ta en passant
-                TeP = 2; //Hvor mange trekk som kan gjøres før denne passenten ikke lenger er gyldig. TeP reduserer med 1 for hvert trekk.
+                TeP = 2; //Hvor mange trekk som kan gjøres før denne passenten ikke lenger er gyldig. TeP reduseres med 1 for hvert trekk.
             }
             if (til == ep) newboard.setCharAt(ep + S, '.'); //Drepper den passerte bonden i forbifarten
             if (til <= H8 && til >= A8) {
@@ -219,9 +219,9 @@ public class Position {
                     newboard.setCharAt(til, 'Q');
             }
         }
-        if(ep > 0){ //Om passant er lovlig, et eller annet sted
+        if(ep > -1){ //Om passant er lovlig, et eller annet sted
             TeP -= 1;
-            if(TeP == 0) ep = 0; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
+            if(TeP == 0) ep = -1; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
         return new Position(newboard.toString(), score, WC, BC, ep, kp);
     }

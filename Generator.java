@@ -1,5 +1,6 @@
 package Chessbot2;
 
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -20,6 +21,38 @@ public class Generator {
         directions.put('K', new Integer[] {N, E, S, W, N+E, S+E, S+W, N+W});
         return directions;
     }
+
+    public static ArrayList<Character> checkCharacter() {
+        /* Lager en liste over lovlige bokstaver, som IsAMove kan bruke til å sjekke input.
+         */
+        ArrayList<Character> bokstaver = new ArrayList(8);
+        bokstaver.add('a');
+        bokstaver.add('b');
+        bokstaver.add('c');
+        bokstaver.add('d');
+        bokstaver.add('e');
+        bokstaver.add('f');
+        bokstaver.add('g');
+        bokstaver.add('h');
+
+        return bokstaver;
+    }
+    public static ArrayList<Character> checkInteger(){
+        /* Lager en liste over lovlige tall, som IsAMove kan bruke til å sjekke input.
+         */
+        ArrayList<Character> tall = new ArrayList<>(8);
+        tall.add('1');
+        tall.add('2');
+        tall.add('3');
+        tall.add('4');
+        tall.add('5');
+        tall.add('6');
+        tall.add('7');
+        tall.add('8');
+
+        return tall;
+    }
+
     public static Dictionary<Character, Integer[]> makePst(){
         Dictionary<Character, Integer[]> pst = new Hashtable();
         pst.put('P', new Integer[] {
