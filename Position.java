@@ -12,20 +12,20 @@ public class Position {
     I tillegg har den funksjoner for å flytte brikker(og dermed opprette ett nytt brett med de nye posisjonene),
     generere lister over alle lovlige trekk, og å rotere brettet helt rundt.
      */
-    static String board;
-    static int score;
-    static Tuple WC;
-    static Tuple BC;
-    static int ep;
-    static boolean kp;
+    String board;
+    int score;
+    Tuple WC;
+    Tuple BC;
+    int ep;
+    boolean kp;
 
     public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean kp) {
-        Position.board = board;
-        Position.score = score;
-        Position.WC = WC;
-        Position.BC = BC;
-        Position.ep = ep;
-        Position.kp = kp;
+        this.board = board;
+        this.score = score;
+        this.WC = WC;
+        this.BC = BC;
+        this.ep = ep;
+        this.kp = kp;
     }
 
     public boolean gen_player_moves(Tuple trekk) {
@@ -157,7 +157,7 @@ public class Position {
         return new String(chars);
     }
 
-    public static Position move(Tuple<Integer, Integer> move){
+    public Position move(Tuple<Integer, Integer> move){
         /* Tar f. eks Tuple(85, 65) som input, ikke Tuple(e2, e4).
         Returnerer ett nytt brett, der trekket er blitt gjort.
         Den oppdaterer også betingelser for rokade, osv.
@@ -219,14 +219,14 @@ public class Position {
                     newboard.setCharAt(til, 'Q');
             }
         }
-        if(ep > -1){ //Om passant er lovlig, et eller annet sted
+        if(ep > 0){ //Om passant er lovlig, et eller annet sted
             TeP -= 1;
             if(TeP == 0) ep = -1; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
         return new Position(newboard.toString(), score, WC, BC, ep, kp);
     }
 
-    public static int value(Tuple<Integer, Integer> move) {
+    public int value(Tuple<Integer, Integer> move) {
         /* Returnerer verdien til et spesifikt trekk.
         Om du tar en dronning sier denne "bra, +879 poeng",
         og om du flytter hesten ned til høyre hjørne sier han "Hva faen, -131 poeng".
@@ -244,9 +244,9 @@ public class Position {
 
         if (brikke == 'P')
             if (til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til]; //Ekstra score om du får en dronning.
-            if (til == ep) {
-                deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
-            }
+        if (til == ep) {
+            deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
+        }
         return deltascore;
     }
 }
