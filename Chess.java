@@ -1,22 +1,24 @@
 package Chessbot2;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Scanner;
 
 public class Chess {
     static String board =
-    "         \n"+ // 1 - 8
-    "         \n"+ // 11 - 18
-    " rnbqkbnr\n"+ // 21 - 28
-    " pppppppp\n"+ // 31 - 38
-    " ........\n"+ // 41 - 48
-    " ........\n"+ // 51 - 58
-    " ........\n"+ // 61 - 68
-    " ........\n"+ // 71 - 78
-    " PPPPPPPP\n"+ // 81 - 88
-    " RNBQKBNR\n"+ // 91 - 98
-    "         \n"+ // 101 - 108
-    "          ";   // 111 - 118
+            "         \n"+ // 1 - 8
+            "         \n"+ // 11 - 18
+            " rnbqkbnr\n"+ // 21 - 28
+            " pppppppp\n"+ // 31 - 38
+            " ........\n"+ // 41 - 48
+            " ........\n"+ // 51 - 58
+            " ........\n"+ // 61 - 68
+            " ........\n"+ // 71 - 78
+            " PPPPPPPP\n"+ // 81 - 88
+            " RNBQKBNR\n"+ // 91 - 98
+            "         \n"+ // 101 - 108
+            "          ";   // 111 - 118
     //Himmeldirectionser
     static int N = -10;
     static int E = 1;
@@ -41,12 +43,14 @@ public class Chess {
     static boolean lovlig = false;
     static boolean gjorttrekk = false;
     static boolean spillerstur = true;
-    static int TeP = 0;
+    static int TeP = 0; //Passanttelleren
+
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Position P = new Position(board, 0, WC, BC, 0, true);
         System.out.println(board);
+
         outer: while(play) {
             lovlig = false;
             gjorttrekk = false;
@@ -65,12 +69,14 @@ public class Chess {
                         P = P.move(trekk);
                         gjorttrekk = true;
                     } else System.err.println("Ulovlig trekk. Prøv igjen.");
-                } else System.out.println("Forstår ikke. Prøv bokstaver fra a-h, og tall fra 1-8, i rekkefølgen bokstav tall bokstav tall.");
+                } else System.err.println("Forstår ikke. Prøv bokstaver fra a-h og tall fra 1-8, i rekkefølgen bokstav tall bokstav tall.");
             }
             P = P.rotate();
             System.out.println(P.board);
         }
     }
+
+
     public static Tuple<Integer, Integer> parse(String c){
         /* Konverterer posisjonen på brettet fra bokstav+tall+bokstav+tall til kun en tuppel av tall.
         f. eks. "e2 e4" blir Tuple(85, 65).
@@ -88,7 +94,7 @@ public class Chess {
         return new Tuple<>(x, y);
     }
     public static boolean IsAMove(String input){
-        /* En funskjon for å sjekke om spilleren skrev noe som kan tolkes som et trekk eller ikke. 
+        /* En funskjon for å sjekke om spilleren skrev noe som kan tolkes som et trekk eller ikke.
         "e2e4" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
           */
         input = input.replaceAll(" ", "");
