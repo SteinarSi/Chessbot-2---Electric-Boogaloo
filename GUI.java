@@ -35,12 +35,7 @@ public class GUI implements ActionListener {
         toolbar.add(text);
 
         JButton end = new JButton("Enter");
-        end.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                usertext = textField.getText();
-            }
-        });
+        end.addActionListener(this);
         toolbar.add(end);
 
 
@@ -130,6 +125,9 @@ public class GUI implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-
+        System.out.println("knapp trykket!");
+        usertext = textField.getText();
+        textField.setText("");
+        System.out.println("Du skrev " + usertext);
     }
 }
