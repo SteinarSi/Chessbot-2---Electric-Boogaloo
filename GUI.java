@@ -1,3 +1,4 @@
+/*
 package Chessbot2;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,6 @@ import static Chessbot2.Chess.*;
 public class GUI implements ActionListener {
 
     public static Game game;
-
     public static String usertext;
     private JTextField textField;
     private final JPanel gui = new JPanel(new BorderLayout(3, 3));
@@ -26,6 +26,13 @@ public class GUI implements ActionListener {
 
         // set up the main GUI
         gui.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+        JToolBar toolbar2 = new JToolBar();
+        JButton quit = new JButton("Quit");
+        toolbar2.add(quit);
+        JButton back = new JButton("Back");
+        toolbar2.add(back);
+        gui.add(toolbar2, BorderLayout.PAGE_START);
 
         JToolBar toolbar = new JToolBar();
         gui.add(toolbar, BorderLayout.PAGE_END);
@@ -131,3 +138,4 @@ public class GUI implements ActionListener {
         System.out.println("Du skrev " + usertext);
     }
 }
+*/
