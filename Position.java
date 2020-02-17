@@ -27,10 +27,13 @@ public class Position {
         this.ep = ep;
         this.kp = kp;
     }
-
     public boolean gen_player_moves(Tuple trekk) {
-        /* Går igjennom alle brikkene til spilleren, og finner hvilke lovlige trekk hver enkelt brikke har.
-        Oppretter en liste over lovlige trekk, og sjekker så om noen av disse samsvarer med trekket spilleren hadde lyst til å gjøre.
+        /* Den tredje funksjonen for å sjekke lovligheten til spillerens trekk.
+        Returnerer denne true, er det bare å sjekke om spilleren står i sjakk, så er trekket 100% lovlig.
+        IsAMove -> parse -> gen_player_moves -> checkCheck
+
+        Går igjennom alle brikkene til spilleren,
+        og sjekker så om noen av disse kan flytte en sted som samsvarer med trekket spilleren hadde lyst til å gjøre.
         Returnerer true/false.
          */
         for (int fra = 0; fra < board.length(); fra++) {
@@ -77,6 +80,28 @@ public class Position {
         }
         return false;
     }
+
+    public boolean checkCheck(Tuple move){
+        /* Den fjerde funksjonen for å sjekke lovligheten til spillerens trekk.
+        Returner denne true er trekket 100% lovlig.
+        IsAMove -> parse -> gen_player_moves -> checkCheck
+
+        Sjekker om spillerens trekk kommer til å sette seg selv i sjakk, eller om han allerede står i sjakk og har ignorert det.
+        Returnerer false om den klarer å finne et fiendtlig trekk som ender opp på kongen, true ellers;
+         */
+        Position copy = new Position(this.board, this.score, this.WC, this.BC, this.ep, this.kp);
+        copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det vil sett ut om spilleren hadde gjort det valgte trekket.
+        copy = copy.rotate();
+        int EnemyKing = 0;
+        ArrayList<Tuple<Integer, Integer>> botmoves = copy.gen_bot_moves();
+        for(int i=0; i<copy.board.length(); i++){ //Finner hvor kongen er.
+            if(copy.board.charAt(i) == 'k') EnemyKing = i;
+        }for(int i=0; i<botmoves.size(); i++) {
+            Tuple<Integer, Integer> mellom = botmoves.get(i);
+            if(mellom.getY() == EnemyKing) return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
+        }return true;
+    }
+
     public ArrayList<Tuple<Integer, Integer>> gen_bot_moves(){
         // TODO: 30.01.2020 Yield
         /* En funksjon som genererer en Array av lovlige trekk en spiller har lov til å gjøre.
@@ -250,3 +275,4 @@ public class Position {
         return deltascore;
     }
 }
+//test2

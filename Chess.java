@@ -18,7 +18,7 @@ public class Chess implements ActionListener {
     static String board =
             "         \n"+ // 1 - 8
             "         \n"+ // 11 - 18
-            " rnbqkbnr\n"+ // 21 - 28
+            " rnbQkbnr\n"+ // 21 - 28
             " pppppppp\n"+ // 31 - 38
             " ........\n"+ // 41 - 48
             " ........\n"+ // 51 - 58
@@ -92,7 +92,6 @@ public class Chess implements ActionListener {
             trykket = false;
             while(!trykket) gjorttrekk = game.move(usertext);
         }
-
     }
 
     public final void initializeGui() {
@@ -185,7 +184,10 @@ public class Chess implements ActionListener {
     }
 
     public static Tuple<Integer, Integer> parse(String c){
-        /* Konverterer posisjonen på brettet fra bokstav+tall+bokstav+tall til kun en tuppel av tall.
+        /*Den andre funksjonen for å sjekke lovligheten til spillerens trekk.
+        Denne oversetter spillerens streng til et trekk som Position kan forstå.
+        IsAMove -> parse -> gen_player_moves -> checkCheck
+
         f. eks. "e2 e4" blir Tuple(85, 65).
         Planen er at kun Chess skal få se syntakser som e2e4,
         og at den skal konvertere alt slikt til Tupler og tall før den sender det til Position og Searcher.
@@ -201,8 +203,11 @@ public class Chess implements ActionListener {
         return new Tuple<>(x, y);
     }
     public static boolean IsAMove(String input){
-        /* En funskjon for å sjekke om spilleren skrev noe som kan tolkes som et trekk eller ikke.
-        "e2e4" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
+        /* Den første funksjonen for å sjekke lovligheten til spillerens trekk.
+        Denne sjekker om spilleren skrev noe som kan tolkes som et trekk eller ikke.
+        IsAMove -> parse -> gen_player_moves -> checkCheck
+
+        "e2 e4 asdsg w3" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
           */
         input = input.replaceAll(" ", "");
         if (input.length() >= 4) {
