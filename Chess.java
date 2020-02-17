@@ -90,7 +90,7 @@ public class Chess implements ActionListener {
         SwingUtilities.invokeLater(r);
         outer: while(play){
             trykket = false;
-            while(!trykket) gjorttrekk = game.move(usertext);
+            while(!trykket) gjorttrekk = game.playerMove(usertext);
         }
     }
 
@@ -174,19 +174,21 @@ public class Chess implements ActionListener {
     public void actionPerformed(ActionEvent Event) {
         if(Event.getSource() == quit) {
             System.exit(0);
-            //gui.dispatchEvent(new WindowEvent(gui, WindowEvent.WINDOW_CLOSING));
         } else if(Event.getSource() == enter){
             trykket = true;
             usertext = textField.getText();
             textField.setText("");
-            System.out.println("Du skrev " + usertext);
+            System.out.println("You wrote " + usertext);
+        } else if(Event.getSource() == back){
+            game.back();
+            System.out.println("Back");
         }
     }
 
     public static Tuple<Integer, Integer> parse(String c){
         /*Den andre funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne oversetter spillerens streng til et trekk som Position kan forstå.
-        IsAMove -> parse -> gen_player_moves -> checkCheck
+        IsAMove -> parse -> check_player_move
 
         f. eks. "e2 e4" blir Tuple(85, 65).
         Planen er at kun Chess skal få se syntakser som e2e4,
@@ -205,7 +207,7 @@ public class Chess implements ActionListener {
     public static boolean IsAMove(String input){
         /* Den første funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne sjekker om spilleren skrev noe som kan tolkes som et trekk eller ikke.
-        IsAMove -> parse -> gen_player_moves -> checkCheck
+        IsAMove -> parse -> check_player_move
 
         "e2 e4 asdsg w3" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
           */

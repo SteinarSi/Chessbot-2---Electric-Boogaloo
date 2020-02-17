@@ -27,74 +27,22 @@ public class Position {
         this.ep = ep;
         this.kp = kp;
     }
-    public boolean gen_player_moves(Tuple trekk) {
-        /* Den tredje funksjonen for å sjekke lovligheten til spillerens trekk.
-        Returnerer denne true, er det bare å sjekke om spilleren står i sjakk, så er trekket 100% lovlig.
-        IsAMove -> parse -> gen_player_moves -> checkCheck
 
-        Går igjennom alle brikkene til spilleren,
-        og sjekker så om noen av disse kan flytte en sted som samsvarer med trekket spilleren hadde lyst til å gjøre.
-        Returnerer true/false.
+    public boolean check_player_move(Tuple move){
+        /* Den tredje og siste funksjonen for å sjekke lovligheten til spillerens trekk.
+        Denne sjekker om spilleren har noen brikker som kan flytte der,
+        og dobbelsjekker at spilleren ikke har prøvd å sette seg selv i sjakk eller noe annet lurt.
+
+        IsAMove -> parse -> check_player_move
          */
-        for (int fra = 0; fra < board.length(); fra++) {
-            char brikke = board.charAt(fra);
-            if (!Character.isUpperCase(brikke)) {
-                continue;
-            }
-            //Sjekker om rokering er lovlig, legger det til i listen
-            if (black) {
-                if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
-                    if (trekk.equals(new Tuple(95, 93))) return true; //Svart rokerer langt
-                }
-                if ((brikke == 'K' && (boolean) BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
-                    if (trekk.equals(new Tuple(95, 97))) return true; //Svart rokerer kort
-                }
-            } else {
-                if ((brikke == 'K' && (boolean) WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
-                    if (trekk.equals(new Tuple(95, 93))) return true; //Hvit rokerer langt
-                }
-                if ((brikke == 'K' && (boolean) WC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
-                    if (trekk.equals(new Tuple(95, 97))) return true; //Hvit rokerer kort
-                }
-            }
-            //Legger til alle normale trekk
-            for (int retning : directions.get(brikke)) {
-                for (int til = fra + retning; true; til += retning) {
-                    char mål = board.charAt(til);
-
-                    if (Character.isUpperCase(mål) || Character.isWhitespace(mål))
-                        break; //Om brikken prøver å ta en vennlig brikke, eller prøver å gå av brettet
-
-                    if (brikke == 'P') {
-                        if ((retning == N || retning == N * 2) && mål != '.') break;
-                        if (retning == N * 2 && (fra < A1 + N || board.charAt(N + fra) != '.')) break;
-                        if ((retning == N + E || retning == N + W) && mål == '.' && til != ep) break; //Om bonden prøver å gå skrått, og det ikke er mulig å ta en passant der.
-                    }
-                    // Om det genererte trekket har kommet helt hit uten å bli brutt,
-                    // og det er det samme som det trekket spilleren prøvde, er spillerens trekk offisielt et lovlig et.
-                    if (trekk.equals(new Tuple(fra, til))) return true;
-
-                    if (brikke == 'P' || brikke == 'N' || brikke == 'K' || Character.isLowerCase(mål)) break;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean checkCheck(Tuple move){
-        /* Den fjerde funksjonen for å sjekke lovligheten til spillerens trekk.
-        Returner denne true er trekket 100% lovlig.
-        IsAMove -> parse -> gen_player_moves -> checkCheck
-
-        Sjekker om spillerens trekk kommer til å sette seg selv i sjakk, eller om han allerede står i sjakk og har ignorert det.
-        Returnerer false om den klarer å finne et fiendtlig trekk som ender opp på kongen, true ellers;
-         */
-        Position copy = new Position(this.board, this.score, this.WC, this.BC, this.ep, this.kp);
+        ArrayList<Tuple<Integer, Integer>> moves = gen_moves();
+        if(!moves.contains(move)) return false;
+        Position copy = copy();
         copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det vil sett ut om spilleren hadde gjort det valgte trekket.
         copy = copy.rotate();
         int EnemyKing = 0;
-        ArrayList<Tuple<Integer, Integer>> botmoves = copy.gen_bot_moves();
-        for(int i=0; i<copy.board.length(); i++){ //Finner hvor kongen er.
+        ArrayList<Tuple<Integer, Integer>> botmoves = copy.gen_moves();
+        for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
             if(copy.board.charAt(i) == 'k') EnemyKing = i;
         }for(int i=0; i<botmoves.size(); i++) {
             Tuple<Integer, Integer> mellom = botmoves.get(i);
@@ -102,7 +50,7 @@ public class Position {
         }return true;
     }
 
-    public ArrayList<Tuple<Integer, Integer>> gen_bot_moves(){
+    public ArrayList<Tuple<Integer, Integer>> gen_moves(){
         // TODO: 30.01.2020 Yield
         /* En funksjon som genererer en Array av lovlige trekk en spiller har lov til å gjøre.
         Laget med hensyn på en bot, vi kan senere implementere noe yield-shit istedenfor lister.
@@ -231,14 +179,14 @@ public class Position {
             if (til <= H8 && til >= A8) {
                 if (spillerstur) { //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
                     boolean promotert = false;
-                    System.out.println("Hvilken brikke vil du promotere til? Q/N/B/R ");
+                    System.out.println("What piece do you want to promote to? Q/N/B/R ");
                     Scanner scanner = new Scanner(System.in);
                     while (!promotert) {
                         char nybrikke = scanner.next().charAt(0);
                         if (nybrikke == 'Q' || nybrikke == 'N' || nybrikke == 'B' || nybrikke == 'R') {
                             newboard.setCharAt(til, nybrikke);
                             promotert = true;
-                        } else System.err.println("Prøv igjen. Husket du stor bokstav?");
+                        } else System.err.println("Try again. Did you remember upper case?");
                     }
                 } else //For botten er det ingen vits i å sjekke hva som er best, så han bare får en dronning uansett. #Stalemeta
                     newboard.setCharAt(til, 'Q');
@@ -248,7 +196,7 @@ public class Position {
             TeP -= 1;
             if(TeP == 0) ep = -1; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
-        return new Position(newboard.toString(), score, WC, BC, ep, kp);
+        return new Position(newboard.toString(), score, WC, BC, ep, kp); //Returnerer et nytt brett, der trekket er gjort
     }
 
     public int value(Tuple<Integer, Integer> move) {
@@ -274,5 +222,6 @@ public class Position {
         }
         return deltascore;
     }
+    public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.kp); }
 }
 //test2
