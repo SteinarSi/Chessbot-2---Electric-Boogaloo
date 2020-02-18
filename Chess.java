@@ -6,6 +6,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,11 +15,13 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Scanner;
 
-public class Chess implements ActionListener {
+import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
+
+public class Chess/* implements ActionListener*/ {
     static String board =
             "         \n"+ // 1 - 8
             "         \n"+ // 11 - 18
-            " rnbQkbnr\n"+ // 21 - 28
+            " rnbqkbnr\n"+ // 21 - 28
             " pppppppp\n"+ // 31 - 38
             " ........\n"+ // 41 - 48
             " ........\n"+ // 51 - 58
@@ -56,16 +59,16 @@ public class Chess implements ActionListener {
     public static Game game;
     public static String usertext;
     public static boolean trykket;
-    private JTextField textField;
-    private final JPanel gui = new JPanel(new BorderLayout(3, 3));
-    private JButton[][] chessBoardSquares = new JButton[8][8];
-    private JPanel chessBoard;
+    public static JTextField textField;
+    public final JPanel gui = new JPanel(new BorderLayout(3, 3));
+    public JButton[][] chessBoardSquares = new JButton[8][8];
+    public JPanel chessBoard;
     private static final String COLS = "ABCDEFGH";
 
-    JButton enter = new JButton("Enter");
-    JButton back = new JButton("Go Back");
-    JButton neww = new JButton("New Game");
-    JButton quit = new JButton("Quit Game");
+    public static JButton enter = new JButton("Enter");
+    public static JButton back = new JButton("Go Back");
+    public static JButton neww = new JButton("New Game");
+    public static JButton quit = new JButton("Quit Game");
 
     Chess() {
         initializeGui();
@@ -88,10 +91,6 @@ public class Chess implements ActionListener {
             }
         };
         SwingUtilities.invokeLater(r);
-        outer: while(play){
-            trykket = false;
-            while(!trykket) gjorttrekk = game.playerMove(usertext);
-        }
     }
 
     public final void initializeGui() {
@@ -110,10 +109,11 @@ public class Chess implements ActionListener {
         JTextField text = new JTextField(20);
         textField = text;
         toolbar.add(text);
-        enter.addActionListener(this);
+        enter.addActionListener(new Action());
+        quit.addActionListener(new Action());
+        back.addActionListener(new Action());
+        textField.addKeyListener(new Action());
         toolbar.add(enter);
-        quit.addActionListener(this);
-
         gui.add(new JLabel("?"), BorderLayout.LINE_START);
 
         chessBoard = new JPanel(new GridLayout(0, 9));
@@ -170,29 +170,14 @@ public class Chess implements ActionListener {
         return gui;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent Event) {
-        if(Event.getSource() == quit) {
-            System.exit(0);
-        } else if(Event.getSource() == enter){
-            trykket = true;
-            usertext = textField.getText();
-            textField.setText("");
-            System.out.println("You wrote " + usertext);
-        } else if(Event.getSource() == back){
-            game.back();
-            System.out.println("Back");
-        }
-    }
-
     public static Tuple<Integer, Integer> parse(String c){
         /*Den andre funksjonen for å sjekke lovligheten til spillerens trekk.
-        Denne oversetter spillerens streng til et trekk som Position kan forstå.
+        Denne oversetter spillerens streng til et trekk som Position og Game kan forstå.
         IsAMove -> parse -> check_player_move
 
         f. eks. "e2 e4" blir Tuple(85, 65).
         Planen er at kun Chess skal få se syntakser som e2e4,
-        og at den skal konvertere alt slikt til Tupler og tall før den sender det til Position og Searcher.
+        og at den skal konvertere alt slikt til Tupler og tall før den sender det til Position, Game, og Searcher.
          */
         int filfra = (int) c.charAt(0) - 'a';
         int rankfra = c.charAt(1) - '1';
@@ -249,5 +234,4 @@ Gamle main
             P = P.rotate();
             System.out.println(P.board);
         }
-
 */
