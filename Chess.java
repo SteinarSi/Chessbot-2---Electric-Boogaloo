@@ -11,14 +11,16 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Scanner;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
 
 public class Chess/* implements ActionListener*/ {
-    static String board =
+    public final static String board =
             "         \n"+ // 1 - 8
             "         \n"+ // 11 - 18
             " rnbqkbnr\n"+ // 21 - 28
@@ -32,15 +34,15 @@ public class Chess/* implements ActionListener*/ {
             "         \n"+ // 101 - 108
             "          ";   // 111 - 118
     //Himmeldirectionser
-    static int N = -10;
-    static int E = 1;
-    static int S = 10;
-    static int W = -1;
+    final static int N = -10;
+    final static int E = 1;
+    final static int S = 10;
+    final static int W = -1;
     //Hjørneindekser
-    static int A1 =  91;
-    static int H1 = 98;
-    static int A8 = 21;
-    static int H8 = 28;
+    final static int A1 =  91;
+    final static int H1 = 98;
+    final static int A8 = 21;
+    final static int H8 = 28;
     //Hvem som kan rokere, og hvor
     static Tuple WC = new Tuple(true, true);
     static Tuple BC = new Tuple(true, true);
@@ -60,6 +62,8 @@ public class Chess/* implements ActionListener*/ {
     public static String usertext;
     public static boolean trykket;
     public static JTextField textField;
+    private static BufferedImage image;
+    public static Hashtable<String, BufferedImage> piecedict = ImageHolder.Awake();
     public final JPanel gui = new JPanel(new BorderLayout(3, 3));
     public JButton[][] chessBoardSquares = new JButton[8][8];
     public JPanel chessBoard;
@@ -160,6 +164,15 @@ public class Chess/* implements ActionListener*/ {
                         chessBoard.add(chessBoardSquares[jj][ii]);
                 }
             }
+        }
+        // TODO: 18.02.2020 Finn ut hvordan brikker skrives til skjermen!
+        File output = new File("Chessbot 2 - Electric Boogaloo\\src\\Chessbot2\\BufferedImageTest.txt");
+        BufferedImage pimg = piecedict.get("pawn_white");
+        try {
+            ImageIO.write(pimg, "png", output);
+            System.out.println("Writing complete.");
+        } catch (IOException e) {
+            System.out.println("Couldn't find the file.");
         }
     }
     public final JComponent getChessBoard() {

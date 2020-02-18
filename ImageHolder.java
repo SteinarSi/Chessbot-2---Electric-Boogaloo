@@ -4,13 +4,17 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 public class ImageHolder {
 
     static Hashtable<String, BufferedImage> imageTable;
 
-    public static void Awake(){
+    public static Hashtable<String, BufferedImage> Awake(){
+        /* Oppretter en dict på der nøkkelen er navnet på brikken, og innholdet er et BufferedImage.
+         */
+        Hashtable<String, BufferedImage> imageTable = new Hashtable<>();
         for (String name : new String[] {
                 "bishop_black",
                 "bishop_white",
@@ -26,11 +30,14 @@ public class ImageHolder {
                 "rook_white"
         }) {
             try {
-                imageTable.put(name, ImageIO.read(new File("Sjakkbrikker\\" + name + ".jpg")));
+                File temp = new File("Chessbot 2 - Electric Boogaloo\\src\\Chessbot2\\Sjakkbrikker\\" + name + ".png");
+                BufferedImage img = ImageIO.read(temp);
+                imageTable.put(name, img);
             } catch (IOException e) {
-                System.out.println("finner ikke brikke \"" + name + ".jpg\"");
+                System.out.println("Cannot find \"" + name + ".png\"");
             }
         }
+        return imageTable;
     }
 
     public static BufferedImage get(String key){
