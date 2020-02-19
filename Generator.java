@@ -1,7 +1,12 @@
 package Chessbot2;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 public class Generator {
@@ -81,7 +86,7 @@ public class Generator {
                 0, -74, -23, -26, -24, -19, -35, -22, -69, 0,
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0,
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0}
-                );
+        );
         pst.put('B', new Integer[] {
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0,
                 0,   0,   0,   0,   0,   0,   0,   0,  0,  0,
@@ -138,5 +143,49 @@ public class Generator {
         return pst;
     }
 
-}
+    public static Hashtable<String, BufferedImage> Awake(){
+        /* Oppretter en dict på der nøkkelen er navnet på brikken, og innholdet er et BufferedImage.
+         */
+        Hashtable<String, BufferedImage> imageTable = new Hashtable<>();
+        for (String name : new String[] {
+                "bishop_black",
+                "bishop_white",
+                "horse_black",
+                "horse_hite",
+                "king_black",
+                "king_white",
+                "pawn_black",
+                "pawn_white",
+                "queen_black",
+                "queen_white",
+                "rook_black",
+                "rook_white"
+        }) {
+            try {
+                File temp = new File("Chessbot 2 - Electric Boogaloo\\src\\Chessbot2\\Sjakkbrikker\\" + name + ".png");
+                BufferedImage img = ImageIO.read(temp);
+                imageTable.put(name, img);
+            } catch (IOException e) {
+                System.out.println("Cannot find \"" + name + ".png\"");
+            }
+        }
+        return imageTable;
+    }
 
+    public static HashMap charToString(){
+        HashMap<Character, String> ret = new HashMap();
+        ret.put('P', "pawn_white");
+        ret.put('p', "pawn_black");
+        ret.put('R', "rook_white");
+        ret.put('r', "rook_black");
+        ret.put('N', "horse_hite");
+        ret.put('n', "horse_black");
+        ret.put('B', "bishop_white");
+        ret.put('b', "bishop_black");
+        ret.put('Q', "queen_white");
+        ret.put('q', "queen_black");
+        ret.put('K', "king_white");
+        ret.put('k', "king_black");
+        return ret;
+    }
+}

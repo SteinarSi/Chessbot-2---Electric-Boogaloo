@@ -1,5 +1,7 @@
 package Chessbot2;
 
+import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -28,26 +30,35 @@ public class Position {
         this.kp = kp;
     }
 
-    public boolean check_player_move(Tuple move){
+    public boolean check_player_move(Tuple<Integer, Integer> move){
         /* Den tredje og siste funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne sjekker om spilleren har noen brikker som kan flytte der,
         og dobbelsjekker at spilleren ikke har prøvd å sette seg selv i sjakk eller noe annet lurt.
 
         IsAMove -> parse -> check_player_move
          */
-        ArrayList<Tuple<Integer, Integer>> moves = gen_moves();
-        if(!moves.contains(move)) return false;
-        Position copy = copy();
-        copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det vil sett ut om spilleren hadde gjort det valgte trekket.
-        copy = copy.rotate();
-        int EnemyKing = 0;
-        ArrayList<Tuple<Integer, Integer>> botmoves = copy.gen_moves();
-        for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
-            if(copy.board.charAt(i) == 'k') EnemyKing = i;
-        }for(int i=0; i<botmoves.size(); i++) {
-            Tuple<Integer, Integer> mellom = botmoves.get(i);
-            if(mellom.getY() == EnemyKing) return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
-        }return true;
+
+        boolean ret = false;
+        ArrayList<Tuple<Integer, Integer>> moves = gen_moves(); //Opretter en liste over nesten-lovlige trekk.
+        for(int i=0; i<moves.size(); i++) {
+            if (moves.get(i).equals(move)) ret = true; //Om trekket er med i listen over nesten-lovligetrekk.
+        }
+        if(ret){
+            Position copy = copy();
+            copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det vil sett ut om spilleren hadde gjort det valgte trekket.
+            copy = copy.rotate();
+            int EnemyKing = 0;
+            ArrayList<Tuple<Integer, Integer>> botmoves = copy.gen_moves();
+            for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
+                if(copy.board.charAt(i) == 'k') EnemyKing = i;
+            }
+            for(int i=0; i<botmoves.size(); i++) {
+                    Tuple<Integer, Integer> mellom = botmoves.get(i);
+                    if (mellom.getY() == EnemyKing)
+                        return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
+                }
+        }
+        return ret;
     }
 
     public ArrayList<Tuple<Integer, Integer>> gen_moves(){
@@ -131,7 +142,7 @@ public class Position {
     }
 
     public Position move(Tuple<Integer, Integer> move){
-        /* Tar f. eks Tuple(85, 65) som input, ikke Tuple(e2, e4).
+        /* Tar f. eks Tuple(85, 65) som input, IKKE Tuple(e2, e4).
         Returnerer ett nytt brett, der trekket er blitt gjort.
         Den oppdaterer også betingelser for rokade, osv.
          */
@@ -176,17 +187,28 @@ public class Position {
                 TeP = 2; //Hvor mange trekk som kan gjøres før denne passenten ikke lenger er gyldig. TeP reduseres med 1 for hvert trekk.
             }
             if (til == ep) newboard.setCharAt(ep + S, '.'); //Drepper den passerte bonden i forbifarten
+
             if (til <= H8 && til >= A8) {
                 if (spillerstur) { //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
-                    boolean promotert = false;
-                    System.out.println("What piece do you want to promote to? Q/N/B/R ");
-                    Scanner scanner = new Scanner(System.in);
-                    while (!promotert) {
-                        char nybrikke = scanner.next().charAt(0);
-                        if (nybrikke == 'Q' || nybrikke == 'N' || nybrikke == 'B' || nybrikke == 'R') {
-                            newboard.setCharAt(til, nybrikke);
-                            promotert = true;
-                        } else System.err.println("Try again. Did you remember upper case?");
+                    boolean done = false;
+                    while(!done) {
+                        Object result = JOptionPane.showInputDialog(gui, "Enter what you want to promote to: (q/n/r/b) ");
+                        if (result.equals("q")) {
+                            newboard.setCharAt(til, 'Q');
+                            done = true;
+                        }
+                        else if (result.equals("r")) {
+                            newboard.setCharAt(til, 'R');
+                            done = true;
+                        }
+                        else if (result.equals("b")) {
+                            newboard.setCharAt(til, 'B');
+                            done = true;
+                        }
+                        else if (result.equals("n")) {
+                            newboard.setCharAt(til, 'N');
+                            done = true;
+                        }
                     }
                 } else //For botten er det ingen vits i å sjekke hva som er best, så han bare får en dronning uansett. #Stalemeta
                     newboard.setCharAt(til, 'Q');
@@ -215,13 +237,14 @@ public class Position {
 
         if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til];
 
-        if (brikke == 'P')
-            if (til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til]; //Ekstra score om du får en dronning.
+        if (brikke == 'P' && til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til]; //Ekstra score om du får en dronning.
         if (til == ep) {
             deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
         }
         return deltascore;
     }
     public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.kp); }
+
+    public String getBoard(){ return this.board; }
 }
 //test2

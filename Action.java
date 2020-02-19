@@ -25,6 +25,7 @@ public class Action extends KeyAdapter implements ActionListener {
                     usertext = textField.getText();
                     textField.setText("");
                     System.out.println("You wrote " + usertext);
+                    game.playerMove(usertext);
                     break;
                 default:
                     break;
@@ -46,9 +47,6 @@ public class Action extends KeyAdapter implements ActionListener {
             trykket = true;
             usertext = textField.getText();
             textField.setText("");
-            System.out.println("You wrote " + usertext);
-        } else if(Event.getSource() == back){
-            game.back();
-        }
+        } else if(Event.getSource() == back){ game.back(); } else if(Event.getSource() == neww) game.newGame();
     }
 }
