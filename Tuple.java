@@ -19,5 +19,5 @@ class Tuple<X, Y> implements iMove<X, Y>{
     public String toString(){
         return "(" + this.x + ", " + this.y + ")";
     }
-    public boolean equals(Tuple obj){ return (this.x == obj.getX() && this.y == obj.getY()); }
+    public boolean equals(iMove obj){ return (this.x == obj.getX() && this.y == obj.getY()); }
 }

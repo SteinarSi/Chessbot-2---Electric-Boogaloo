@@ -21,19 +21,6 @@ public class Game {
         return madeMoves.get(madeMoves.size()-1).board;
     }
 
-    public void back() {
-        /*Sletter de to siste brettene. Hvis spilleren gjør en tabbe,
-        og botten utnytter det, er det meningsløst å kun slette de siste brettet,
-        da bare gjør botten det samme en gang til. Derfor sletter vi to brett.
-        */
-        if(madeMoves.size() >= 2) {
-            madeMoves.remove(madeMoves.size() - 1);
-            madeMoves.remove(madeMoves.size() - 1);
-            currentBoard = madeMoves.get(madeMoves.size()-1);
-            paintPieces();
-        }else System.out.println("Can't go further back!");
-    }
-
     public static String getBoard() { return currentBoard.getBoard(); }
 
     public boolean playerMove(String command) {
@@ -47,29 +34,45 @@ public class Game {
         if(IsAMove(command)) {
             Tuple<Integer, Integer> com = parse(command);
             if (currentBoard.check_player_move(com)) {
+                //Gjør trekk for spilleren
                 currentBoard = currentBoard.move(com);
                 madeMoves.add(currentBoard);
                 black = true;
                 spillerstur = false;
                 paintPieces();
+
+                //Gjør trekk for botten
                 currentBoard = currentBoard.rotate();
-                Tuple botmove = Searcher.findMove(currentBoard);
+                iMove<Integer, Integer> botmove = Searcher.findMove(currentBoard);
                 botMove(botmove);
                 paintPieces();
                 black = false;
                 spillerstur = true;
                 return true;
+
+
             } else System.err.println("Not a legal move!");
         } else System.err.println("Try typing a move on the format 'letter number letter number'");
-
         return false;
     }
-    public void botMove(Tuple<Integer, Integer> command){
+
+    public void back() {
+        /*Sletter de to siste brettene. Hvis spilleren gjør en tabbe,
+        og botten utnytter det, er det meningsløst å kun slette de siste brettet,
+        da bare gjør botten det samme en gang til. Derfor sletter vi to brett.
+        */
+        if(madeMoves.size() >= 2) {
+            madeMoves.remove(madeMoves.size() - 1);
+            madeMoves.remove(madeMoves.size() - 1);
+            currentBoard = madeMoves.get(madeMoves.size()-1);
+            paintPieces();
+        }else System.out.println("Can't go further back!");
+    }
+    public void botMove(iMove<Integer, Integer> command){
         currentBoard = currentBoard.move(command);
         currentBoard = currentBoard.rotate();
         madeMoves.add(currentBoard);
     }
-
     public void newGame(){
         madeMoves.clear();
         currentBoard = new Position(board, 0, new Tuple(true, true), new Tuple(true, true), 0, true);
