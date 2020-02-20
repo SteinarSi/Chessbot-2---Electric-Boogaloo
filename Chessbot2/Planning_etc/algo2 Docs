@@ -1,0 +1,40 @@
+Author: Sander Wiig
+
+--Some terms that are used--
+Stability Index: A number that represents the probablility that the move results in a dramatic change in the game state.
+                 The Index is calculated via the GetStabilityIndex() method in the Search class.
+Weight: How 'good' or bad a move is.
+n: the minimal depth the algorithm will examine.
+m: the maximum depth the algorithm will examine.
+
+
+--How the search works--
+    It starts by calulating the possible moves, assign weight and stability Index.
+    Order by highest weight;
+    Calulate the counter moves and assign weight.
+    Repeat n times.
+    If a node(the move) is stable*, stop evaluating further child nodes. If a node is not stable continue calculating untill m depth has been reached.
+    For every move
+    
+
+*What stable means is TBD
+
+function alphabeta(node, depth, α, β, maximizingPlayer) is  
+    if depth = 0 or node is a terminal node or node is stable then
+        return the heuristic value of node
+    if maximizingPlayer then
+        value := −∞
+        for each child of node do
+            value := max(value, alphabeta(child, depth − 1, α, β, FALSE))
+            α := max(α, value)
+            if α ≥ β then
+                break (* β cut-off *)
+        return value
+    else
+        value := +∞
+        for each child of node do
+            value := min(value, alphabeta(child, depth − 1, α, β, TRUE))
+            β := min(β, value)
+            if α ≥ β then
+                break (* α cut-off *)
+        return value
