@@ -3,11 +3,12 @@ package Chessbot2;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 import static Chessbot2.Chess.*;
 
-public class Position {
+public class Position implements Comparable<Position> {
     /* Brettet.
     Dette objektet husker hvor alle brikkene står,
     hvem som har lov til å rokere hvor, og hvor det er lov til å ta en passant.
@@ -216,7 +217,7 @@ public class Position {
         }
         if(ep > 0){ //Om passant er lovlig, et eller annet sted
             TeP -= 1;
-            if(TeP == 0) ep = -1; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
+            if(TeP == 0) ep = 0; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
         return new Position(newboard.toString(), score, WC, BC, ep, kp); //Returnerer et nytt brett, der trekket er gjort
     }
@@ -238,13 +239,16 @@ public class Position {
         if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til];
 
         if (brikke == 'P' && til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til]; //Ekstra score om du får en dronning.
-        if (til == ep) {
-            deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
-        }
+        if (brikke == 'P' && til == ep) deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
         return deltascore;
     }
     public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.kp); }
 
     public String getBoard(){ return this.board; }
+
+    public int compareTo(Position pos) {
+        Integer thisscore = this.score;
+        Integer otherscore = this.score;
+        return thisscore.compareTo(otherscore);
+    }
 }
-//test2

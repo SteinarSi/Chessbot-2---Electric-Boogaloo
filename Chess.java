@@ -4,25 +4,15 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.File;
-import java.io.IOException;
-import java.nio.Buffer;
 import java.util.*;
-
-import static com.sun.java.accessibility.util.AWTEventMonitor.addKeyListener;
 
 public class Chess/* implements ActionListener*/ {
     public final static String board =
             "         \n"+ // 1 - 8
             "         \n"+ // 11 - 18
             " rnbqkbnr\n"+ // 21 - 28
-            " Pppppppp\n"+ // 31 - 38
+            " pppppppp\n"+ // 31 - 38
             " ........\n"+ // 41 - 48
             " ........\n"+ // 51 - 58
             " ........\n"+ // 61 - 68
@@ -177,7 +167,7 @@ public class Chess/* implements ActionListener*/ {
                 chessBoardSquares[jj][ii] = b;
             }
         }
-        
+
         //fill the chess board
         chessBoard.add(new JLabel(""));
         //fill the top row

@@ -13,40 +13,37 @@ public class Action extends KeyAdapter implements ActionListener {
     En knapp på skjermen legger du til i actionPerformed,
     og med '<knapp>.addActionListener(new Action())' i main.
     */
-    public void keyTyped(KeyEvent e) { } //Implementer senere hvis vi gidder
-
     public void keyPressed(KeyEvent e){
         /* Holder styr på hva som skjer hver gang brukeren trykker en tast på tastaturet.
          */
         int key = e.getKeyCode();
-        try{
-            switch(key){
+        try {
+            switch (key) {
                 case KeyEvent.VK_ENTER:
                     usertext = textField.getText();
                     textField.setText("");
-                    System.out.println("You wrote " + usertext);
-                    game.playerMove(usertext);
-                    break;
-                default:
+                    if (usertext.equals("quit")) System.exit(0);
+                    else if (usertext.equals("back")) game.back();
+                    else if (usertext.equals("new")) game.newGame();
+                    else game.playerMove(usertext);
                     break;
             }
         } catch(Exception a) {
-            System.out.println("Unknown button");
+            System.out.println("Unexpected button");
         }
     }
-    @Override
-    public void keyReleased(KeyEvent e) { } //Implementer senere hvis vi gidder
-    //@Override
-
     public void actionPerformed(ActionEvent Event) {
         /* Holder styr på hva som skjer hver gang brukeren trykker en knapp på skjermen.
          */
-        if(Event.getSource() == quit) {
-            System.exit(0);
-        } else if(Event.getSource() == enter){
-            trykket = true;
+        if(Event.getSource() == quit) System.exit(0);
+        else if(Event.getSource() == enter){
             usertext = textField.getText();
             textField.setText("");
-        } else if(Event.getSource() == back){ game.back(); } else if(Event.getSource() == neww) game.newGame();
+            game.playerMove(usertext);
+        }
+        else if(Event.getSource() == back) game.back();
+        else if(Event.getSource() == neww) game.newGame();
     }
+    public void keyReleased(KeyEvent e) { } //Implementer hvis vi får behov
+    public void keyTyped(KeyEvent e) { } //Implementer hvis vi får behov
 }
