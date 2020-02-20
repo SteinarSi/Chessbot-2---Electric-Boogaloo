@@ -1,4 +1,4 @@
-package Chessbot2.Planning_etc.Searching_stuff;
+package Chessbot2;
 
 import Chessbot2.*;
 
@@ -16,30 +16,31 @@ public class Search
     static int alpha = 0;
     static int beta = 0;
 
-    public static Move CalulateBestMove(Position board) 
+    public static Move CalulateBestMove(Position board)
     {
         List<Move> moves = new ArrayList<>();
-        for (iMove move : board.gen_moves(false)) 
+        for (iMove move : board.gen_moves(false))
         {
             moves.add((Move) move);
         }
         Move[] moveArr = new Move[moves.size()];
-        for (int i=0; i<moves.size(); i++) 
+        for (int i=0; i<moves.size(); i++)
         {
             moves.get(i).weight = AlphaBeta(moves.get(i), plies, alpha, beta, true, board);
             moveArr[i] = moves.get(i);
         }
+        System.out.println("got hrere");
         Arrays.sort(moveArr);//sort all the scores
         return moveArr[0];//return the best move
     }
-    
-    public static int AlphaBeta(Move node, int n, int alpha, int beta, boolean isMaximizingPlayer, Position board) 
+
+    public static int AlphaBeta(Move node, int n, int alpha, int beta, boolean isMaximizingPlayer, Position board)
     {
         int value;
         Position currPos = board;
         Position tempPos;
         if ((n == 0) || node.stabilityIndex)
-        //return the node weight if the node is stable or has reached sufficent depth
+            //return the node weight if the node is stable or has reached sufficent depth
             return currPos.value(node);
         if (isMaximizingPlayer)
         {
@@ -48,7 +49,7 @@ public class Search
             tempPos.rotate();//Switch to other POV
             for (iMove move : tempPos.gen_moves(false)) //generate sub-nodes
             {
-                value = Math.max(value, AlphaBeta((Move) move, n - 1, alpha, beta, false, tempPos));//sim next 
+                value = Math.max(value, AlphaBeta((Move) move, n - 1, alpha, beta, false, tempPos));//sim next
                 alpha = Math.max(alpha, value);
                 if (alpha >= beta)
                     break;
@@ -71,7 +72,7 @@ public class Search
         return -1;
     }
 
-    public static boolean CalculateStabilityIndex(Move move, Position board) 
+    public static boolean CalculateStabilityIndex(Move move, Position board)
     {
         int stabilityCriteria = 250;
         Position currPos = board;
@@ -84,4 +85,5 @@ public class Search
         }
         return true;
     }
+
 }
