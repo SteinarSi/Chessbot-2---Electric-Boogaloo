@@ -1,6 +1,10 @@
-package Chessbot2;
+package Searching_stuff;
+
+import Chessbot2.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -8,14 +12,20 @@ import java.util.List;
  */
 public class Search
 {
-    static int stabilityCriteria = 0;
+    static int plies = 3;
+    static int alpha = 0;
+    static int beta = 0;
 
-    static Move CalulateBestMove(Move[] moves) 
+    static Move CalulateBestMove(List<Move> moves) 
     {
-        for (Move move : moves) 
+        Move[] moveArr = new Move[moves.size()];
+        for (int i=0; i<moves.size(); i++) 
         {
-            
+            moves.get(i).weight = AlphaBeta(moves.get(i), plies, alpha, beta, true, Game.currentBoard);
+            moveArr[i] = moves.get(i);
         }
+        Arrays.sort(moveArr);//sort all the scores
+        return moveArr[0];//return the best move
     }
     
     static int AlphaBeta(Move node, int n, int alpha, int beta, boolean isMaximizingPlayer, Position board) 
@@ -23,7 +33,7 @@ public class Search
         int value;
         Position currPos = board;
         Position tempPos;
-        if ((n == 0) || (node.stabilityIndex > stabilityCriteria))
+        if ((n == 0) || node.stabilityIndex)
         //return the node weight if the node is stable or has reached sufficent depth
             return currPos.value(node);
         if (isMaximizingPlayer)
@@ -56,9 +66,17 @@ public class Search
         throw new Exception("Unexpected Exception occured");
     }
 
-    static int CalculateStabilityIndex(Move move) 
+    static boolean CalculateStabilityIndex(Move move, Position board) 
     {
-        return -1;
+        int stabilityCriteria = 250;
+        Position currPos = board;
+        Position tempPos = currPos.move(move);
+        tempPos.rotate();
+        for (Move i : tempPos.gen_moves())
+        {
+            if(tempPos.value(i) > stabilityCriteria)
+                return false;
+        }
+        return true;
     }
-    
 }

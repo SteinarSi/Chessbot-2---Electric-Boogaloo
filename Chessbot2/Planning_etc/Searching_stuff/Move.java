@@ -1,11 +1,8 @@
-/**
- * IMove
- */
-public class Move 
+public class Move implements Comparable<Move>
 {
     int x;
     int y;
-    int stabilityIndex;
+    boolean stabilityIndex;
     int weight;
 
     public Move(int x, int y)
@@ -14,7 +11,7 @@ public class Move
         this.y = y;
     }
 
-    public Move(int x, int y, int stabIndex, int weight) 
+    public Move(int x, int y, boolean stabIndex, int weight) 
     {
         this.x = x;
         this.y = y;
@@ -31,7 +28,15 @@ public class Move
     public String toString(){
         return "(" + this.x + ", " + this.y + ")";
     }
-    public boolean equals(Move obj){
+
+    public boolean equals(Move obj) {
         return (this.x == obj.getX() && this.y == obj.getY());
+    }
+
+    public int compareTo(Move move) 
+    {
+        Integer foo = this.weight;
+        Integer bar = move.weight;
+        return foo.compareTo(bar);
     }
 }
