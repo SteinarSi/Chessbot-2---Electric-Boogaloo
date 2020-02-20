@@ -1,6 +1,6 @@
 package Chessbot2;
 
-class Tuple<X, Y> {
+class Tuple<X, Y> implements iMove<X, Y>{
     /*
     Definerer Tupler, som fra nå av er mutable. "Reality can be whatever I want" - Thanos
      */
@@ -19,9 +19,5 @@ class Tuple<X, Y> {
     public String toString(){
         return "(" + this.x + ", " + this.y + ")";
     }
-    public boolean equals(Tuple obj){
-        return (this.x == obj.getX() && this.y == obj.getY());
-    }
+    public boolean equals(iMove obj){ return (this.x == obj.getX() && this.y == obj.getY()); }
 }
-
-
