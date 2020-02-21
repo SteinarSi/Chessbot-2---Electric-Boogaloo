@@ -201,7 +201,7 @@ public class Position implements Comparable<Position> {
             if (til == ep) newboard.setCharAt(ep + S, '.'); //Drepper den passerte bonden i forbifarten
 
             if (til <= H8 && til >= A8) { //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
-                if (spillerstur && this == game.getCurrentBoard()) { //Sikrer at det er spillerens tur, og at dette trekket blir gjort på det faktiske brettet, ikke bare en kopi.
+                if (spillerstur && this == game.getCurrentBoard()) { //Sikrer at det er spillerens tur, og at dette trekket blir gjort på d
                     boolean done = false;
                     do {
                         Object result = JOptionPane.showInputDialog(gui, "Enter what you want to promote to: (q/n/r/b) ");
@@ -244,7 +244,7 @@ public class Position implements Comparable<Position> {
 
         int deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
 
-        if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til];
+        if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til] + pieceValue.get(Character.toUpperCase(dreptbrikke));
 
         if (brikke == 'P' && til <= H8 && til>= A8) deltascore += pst.get('Q')[til] - pst.get('P')[til]; //Ekstra score om du får en dronning.
         if (brikke == 'P' && til == ep) deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)

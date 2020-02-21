@@ -26,7 +26,17 @@ public class Generator {
         directions.put('K', new Integer[] {N, E, S, W, N+E, S+E, S+W, N+W});
         return directions;
     }
+    public static HashMap<Character, Integer> makePieceValue(){
+        HashMap<Character, Integer> ret = new HashMap<>();
+        ret.put('P', 100);
+        ret.put('N', 280);
+        ret.put('B', 320);
+        ret.put('R', 479);
+        ret.put('Q', 929);
+        ret.put('K', 69420);
+        return ret;
 
+    }
     public static ArrayList<Character> checkCharacter() {
         /* Lager en liste over lovlige bokstaver, som IsAMove kan bruke til å sjekke input.
          */

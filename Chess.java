@@ -43,6 +43,7 @@ public class Chess/* implements ActionListener*/ {
     public static ArrayList<Character> tall = Generator.checkInteger();
     public static Hashtable<String, BufferedImage> piecedict = Generator.Awake();
     public static HashMap<Character, String> charToString = Generator.charToString();
+    public static HashMap<Character, Integer> pieceValue = Generator.makePieceValue();
 
     static boolean black = false;
     static boolean play = true;
@@ -159,7 +160,6 @@ public class Chess/* implements ActionListener*/ {
                 chessBoardSquares[jj][ii] = b;
             }
         }
-
         //fill the chess board
         //chessBoard.add(new JLabel(""));
         //fill the top row
