@@ -141,57 +141,43 @@ public class Chess/* implements ActionListener*/ {
         toolbar.add(enter);
         gui.add(new JLabel("?"), BorderLayout.LINE_START);
 
-        chessBoard = new JPanel(new GridLayout(0, 9));
+        chessBoard = new JPanel(new GridLayout(0, 8));
         chessBoard.setBorder(new LineBorder(Color.BLACK));
         gui.add(chessBoard);
 
         // create the chess board squares
         Insets buttonMargin = new Insets(0,0,0,0);
-        BufferedImage pimg = piecedict.get("pawn_black"); //Setter defaulten-verdien til hver rute til å ha en svart bonde. Unødvenig?
         for (int ii = 0; ii < chessBoardSquares.length; ii++) {
             for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
 
                 JButton b = new JButton();
                 b.setMargin(buttonMargin);
-                // our chess pieces are 64x64 px in size, so we'll
-                // 'fill this in' using a transparent icon..
-                ImageIcon icon = new ImageIcon(new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB));
-                icon.setImage(pimg);
+                ImageIcon icon = new ImageIcon(new BufferedImage(84, 84, BufferedImage.TYPE_INT_ARGB));
                 b.setIcon(icon);
-                if ((jj % 2 == 1 && ii % 2 == 1) || (jj % 2 == 0 && ii % 2 == 0)) {
-                    b.setBackground(Color.LIGHT_GRAY);
-                } else {
-                    b.setBackground(Color.DARK_GRAY);
-                }
-
+                if ((jj % 2 == 1 && ii % 2 == 1) || (jj % 2 == 0 && ii % 2 == 0)) b.setBackground(Color.LIGHT_GRAY);
+                else b.setBackground(Color.DARK_GRAY);
                 chessBoardSquares[jj][ii] = b;
             }
         }
 
         //fill the chess board
-        chessBoard.add(new JLabel(""));
+        //chessBoard.add(new JLabel(""));
         //fill the top row
-        for (int ii = 0; ii < 8; ii++) {
-            chessBoard.add(
-                    new JLabel(COLS.substring(ii, ii + 1),
-                            SwingConstants.CENTER));
-        }
+        //for (int ii = 0; ii < 8; ii++) {
+          //  chessBoard.add(new JLabel(COLS.substring(ii, ii + 1), SwingConstants.CENTER));
+        //}
         // fill the black non-pawn piece row
         for (int ii = 0; ii < 8; ii++) {
             for (int jj = 0; jj < 8; jj++) {
-                switch (jj) {
-                    case 0:
-                        chessBoard.add(new JLabel("" + (8 - ii),
-                                SwingConstants.CENTER));
-                    default:
-                        chessBoard.add(chessBoardSquares[jj][ii]);
-                }
+                //switch (jj) {
+                  //  case 0:
+                    //    chessBoard.add(new JLabel("" /*+ (8 - ii)*/, SwingConstants.CENTER));
+                    //default:
+                chessBoard.add(chessBoardSquares[jj][ii]);
+                //}
             }
         }
     }
-
-    public final JComponent getChessBoard() { return chessBoard; }
-
     public final JComponent getGui() { return gui; }
 
     public static Tuple<Integer, Integer> parse(String c){

@@ -200,28 +200,25 @@ public class Position implements Comparable<Position> {
             }
             if (til == ep) newboard.setCharAt(ep + S, '.'); //Drepper den passerte bonden i forbifarten
 
-            if (til <= H8 && til >= A8) {
-                if (spillerstur) { //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
+            if (til <= H8 && til >= A8) { //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
+                if (spillerstur && this == game.getCurrentBoard()) { //Sikrer at det er spillerens tur, og at dette trekket blir gjort på det faktiske brettet, ikke bare en kopi.
                     boolean done = false;
-                    while(!done) {
+                    do {
                         Object result = JOptionPane.showInputDialog(gui, "Enter what you want to promote to: (q/n/r/b) ");
                         if (result.equals("q")) {
                             newboard.setCharAt(til, 'Q');
                             done = true;
-                        }
-                        else if (result.equals("r")) {
+                        } else if (result.equals("r")) {
                             newboard.setCharAt(til, 'R');
                             done = true;
-                        }
-                        else if (result.equals("b")) {
+                        } else if (result.equals("b")) {
                             newboard.setCharAt(til, 'B');
                             done = true;
-                        }
-                        else if (result.equals("n")) {
+                        } else if (result.equals("n")) {
                             newboard.setCharAt(til, 'N');
                             done = true;
                         }
-                    }
+                    } while (!done);
                 } else //For botten er det ingen vits i å sjekke hva som er best, så han bare får en dronning uansett. #Stalemeta
                     newboard.setCharAt(til, 'Q');
             }
