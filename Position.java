@@ -68,7 +68,7 @@ public class Position implements Comparable<Position> {
     }
 
     public ArrayList<iMove<Integer, Integer>> gen_moves(boolean movetype){
-        // TODO: 30.01.2020 Yield
+        // TO DO: 30.01.2020 Yield
         /* En funksjon som genererer en Array av lovlige trekk en spiller har lov til å gjøre.
         Laget med hensyn på en bot, vi kan senere implementere noe yield-shit istedenfor lister.
          */

@@ -4,39 +4,39 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-public class Chess/* implements ActionListener*/ {
-    public final static String board =
-            "         \n"+ // 1 - 8
-            "         \n"+ // 11 - 18
-            " rnbqkbnr\n"+ // 21 - 28
-            " pppppppp\n"+ // 31 - 38
-            " ........\n"+ // 41 - 48
-            " ........\n"+ // 51 - 58
-            " ........\n"+ // 61 - 68
-            " ........\n"+ // 71 - 78
-            " PPPPPPPP\n"+ // 81 - 88
-            " RNBQKBNR\n"+ // 91 - 98
-            "         \n"+ // 101 - 108
-            "          ";  // 111 - 118
-    //Himmeldirectionser
+public class Chess/* implements ActionListener */ {
+    public final static String board = "         \n" + // 1 - 8
+            "         \n" + // 11 - 18
+            " rnbqkbnr\n" + // 21 - 28
+            " pppppppp\n" + // 31 - 38
+            " ........\n" + // 41 - 48
+            " ........\n" + // 51 - 58
+            " ........\n" + // 61 - 68
+            " ........\n" + // 71 - 78
+            " PPPPPPPP\n" + // 81 - 88
+            " RNBQKBNR\n" + // 91 - 98
+            "         \n" + // 101 - 108
+            "          "; // 111 - 118
+    // Himmeldirectionser
     final static int N = -10;
     final static int E = 1;
     final static int S = 10;
     final static int W = -1;
-    //Hjørneindekser
-    final static int A1 =  91;
+    // Hjørneindekser
+    final static int A1 = 91;
     final static int H1 = 98;
     final static int A8 = 21;
     final static int H8 = 28;
 
-    //Hvem som kan rokere, og hvor
+    // Hvem som kan rokere, og hvor
     static Tuple WC = new Tuple(true, true);
     static Tuple BC = new Tuple(true, true);
 
-    //Genererer dicter for brettverdier og himmelretningene til hver enkelt brikke
+    // Genererer dicter for brettverdier og himmelretningene til hver enkelt brikke
     public static Dictionary<Character, Integer[]> pst = Generator.makePst();
     public static Dictionary<Character, Integer[]> directions = Generator.makeDirections();
     public static ArrayList<Character> bokstaver = Generator.checkCharacter();
@@ -48,7 +48,7 @@ public class Chess/* implements ActionListener*/ {
     static boolean play = true;
     static boolean gjorttrekk = false;
     static boolean spillerstur = true;
-    static int TeP = 0; //Passanttelleren
+    static int TeP = 0; // Passanttelleren
     static Character nybrikke;
     static boolean promotert = false;
 
@@ -71,7 +71,7 @@ public class Chess/* implements ActionListener*/ {
     }
 
     public static void main(String[] args) {
-        // TODO: 03.02.2020 Skriv hele main på nytt
+        // TO DO: 03.02.2020 Skriv hele main på nytt
         game = new Game();
         Runnable r = new Runnable() {
             @Override
@@ -88,33 +88,38 @@ public class Chess/* implements ActionListener*/ {
             }
         };
         SwingUtilities.invokeLater(r);
-
-
     }
-    public static Tuple<Integer, Integer> indexToList(int index){
+
+    public static Tuple<Integer, Integer> indexToList(int index) {
         index -= 20;
-        Integer y = index/10;
-        Integer x = index%10;
+        Integer y = index / 10;
+        Integer x = index % 10;
         return new Tuple(x, y);
     }
 
-    public static void paintPieces(){
-        /* En funksjon for å oppdatere alt det visuelle på brettet. Denne må kalles hver gang noen har flyttet en brikke.
-        Husk at denne tar utgangspunkt i at Hvit har brikker med store bokstaver, og Svart har små.
-        Om du bruker rotate() en gang for mye eller en gang for lite, får alle brikkene invertert farge og posisjon.
+    public static void paintPieces() {
+        /*
+         * En funksjon for å oppdatere alt det visuelle på brettet. Denne må kalles hver
+         * gang noen har flyttet en brikke. Husk at denne tar utgangspunkt i at Hvit har
+         * brikker med store bokstaver, og Svart har små. Om du bruker rotate() en gang
+         * for mye eller en gang for lite, får alle brikkene invertert farge og
+         * posisjon.
          */
         String currentBoard = game.getBoard();
-        for(int i=20; i<board.length()-20; i++){
+        for (int i = 20; i < board.length() - 20; i++) {
             Tuple<Integer, Integer> indekser = indexToList(i);
             Integer X = indekser.getX();
             Integer Y = indekser.getY();
-            if(X == 0 || X == 9) continue;
+            if (X == 0 || X == 9)
+                continue;
             ImageIcon icon = new ImageIcon(new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB));
 
-            //Gir ruten et bilde av en brikke, om det står en brikke oppå den. Om ikke blir bildet bare blankt.
-            if(charToString.containsKey(currentBoard.charAt(i))) icon.setImage(piecedict.get(charToString.get(currentBoard.charAt(i))));
+            // Gir ruten et bilde av en brikke, om det står en brikke oppå den. Om ikke blir
+            // bildet bare blankt.
+            if (charToString.containsKey(currentBoard.charAt(i)))
+                icon.setImage(piecedict.get(charToString.get(currentBoard.charAt(i))));
 
-            chessBoardSquares[X-1][Y].setIcon(icon);
+            chessBoardSquares[X - 1][Y].setIcon(icon);
         }
     }
 
@@ -136,7 +141,7 @@ public class Chess/* implements ActionListener*/ {
         enter.addActionListener(new Action());
         quit.addActionListener(new Action());
         back.addActionListener(new Action());
-        textField.addKeyListener(new Action());
+        textField.addKeyListener((KeyListener) new Action());
         neww.addActionListener(new Action());
         toolbar.add(enter);
         gui.add(new JLabel("?"), BorderLayout.LINE_START);
