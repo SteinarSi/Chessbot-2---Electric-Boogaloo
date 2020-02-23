@@ -49,17 +49,17 @@ public class Position implements Comparable<Position> {
         }
         if(ret){
             Position copy = copy();
-            copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det ville sett ut om spilleren hadde gjort det valgte trekket.
+            copy = copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det ville sett ut om spilleren hadde gjort det valgte trekket.
             copy = copy.rotate();
-            int EnemyKing = 0;
+            int King = 0;
             ArrayList<iMove<Integer, Integer>> botmoves = copy.gen_moves(true);
             for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
-                if(copy.board.charAt(i) == 'k') EnemyKing = i;
+                if(copy.board.charAt(i) == 'k') King = i;
             }
             for(int i=0; i<botmoves.size(); i++) {
                 iMove<Integer, Integer> mellom = botmoves.get(i);
-                if (mellom.getY() == EnemyKing) {
-                    System.out.println("Det trekket gjør at kongen står i sjakk!");
+                if (mellom.getY() == King) {
+                    System.err.println("Don't put your king in check!");
                     return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
                 }
             }

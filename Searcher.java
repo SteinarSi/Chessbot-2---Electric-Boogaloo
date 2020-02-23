@@ -1,5 +1,6 @@
 package Chessbot2;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -7,47 +8,84 @@ import java.util.Random;
 import static Chessbot2.Chess.*;
 
 public class Searcher {
-    public static Tuple<Integer, Integer> findMove(Position currentBoard){
+
+    static int depth = 3;
+    private static String print;
+
+    public static iMove<Integer, Integer> findMove(Position currentBoard){
         Random random = new Random();
-        ArrayList<Tuple<Integer, Integer>> moves = currentBoard.gen_moves();
+        ArrayList<iMove<Integer, Integer>> moves = currentBoard.gen_moves(true);
         return moves.get(random.nextInt(moves.size()));
 
     }
-    public static Tuple<Integer, Integer> findOkMove(Position currentBoard){
-        ArrayList<Tuple<Integer, Integer>> moves = currentBoard.gen_moves();
+    public static iMove<Integer, Integer> findOkMove(Position currentBoard){
+
         int bestvalue = -100_000_000;
-        Tuple<Integer, Integer> bestmove = null;
-
-        for(Tuple<Integer, Integer> move : moves){
-            int initvalue = 0;
+        iMove<Integer, Integer> bestmove = null;
+        ArrayList<iMove<Integer, Integer>> moves = currentBoard.gen_moves(true);
+        for(iMove<Integer, Integer> move : moves){
+            int initvalue = currentBoard.value(move);
             Position copy = currentBoard.copy();
-            initvalue += currentBoard.value(move);
             copy = copy.move(move);
-            copy.rotate();
+            copy = copy.rotate();
 
-            int newbestvalue = -100_000_000;
-            Tuple<Integer, Integer> newbestmove = null;
-            ArrayList<Tuple<Integer, Integer>> newmoves = copy.gen_moves();
-            for(Tuple<Integer, Integer> newmove : newmoves){
-                int newscore = copy.value(newmove);
-                if(newscore > newbestvalue){
-                    newbestvalue = newscore;
-                    newbestmove = newmove;
+            int bestvalue2 = -100_000_000;
+            iMove<Integer, Integer> bestmove2 = null;
+            ArrayList<iMove<Integer, Integer>> moves2 = copy.gen_moves(true);
+            for(iMove<Integer, Integer> move2 : moves2){
+                int score2 = copy.value(move2);
+                Position copy2 = copy.copy();
+                copy2 = copy2.move(move2);
+                copy2 = copy2.rotate();
+
+                int bestvalue3 = -100_000_000;
+                ArrayList<iMove<Integer, Integer>> moves3 = copy2.gen_moves(true);
+                for(iMove move3 : moves3){
+                    int score3 = copy2.value(move3);
+                    Position copy3 = copy2.copy();
+                    copy3 = copy3.move(move3);
+                    copy3 = copy3.rotate();
+
+                    int bestvalue4 = -100_000_000;
+                    ArrayList<iMove<Integer, Integer>> moves4 = copy3.gen_moves(true);
+                    for(iMove move4 : moves4){
+                        int score4 = copy3.value(move4);
+                        Position copy4 = copy3.copy();
+                        copy4 = copy4.move(move4);
+                        copy4 = copy4.rotate();
+
+                        int bestvalue5 = -100_000_000;
+                        ArrayList<iMove<Integer, Integer>> moves5 = copy4.gen_moves(true);
+                        for(iMove move5 : moves5){
+                            int score5 = copy4.value(move5);
+                            if(score5 > bestvalue5){
+                                bestvalue5 = score5;
+                            }
+                        }
+                        score4 -= bestvalue5;
+                        if(score4 > bestvalue4){
+                            bestvalue4 = score4;
+                        }
+                    }
+                    score3 -= bestvalue4;
+                    if(score3 > bestvalue3){
+                        bestvalue3 = score3;
+                    }
                 }
-            }
-            initvalue -= newbestvalue;
+                score2 -= bestvalue3;
+                if(score2 > bestvalue2){
+                    bestvalue2 = score2;
+                    bestmove2 = move2;
+                }
+            }initvalue -= bestvalue2;
             if(initvalue > bestvalue){
                 bestvalue = initvalue;
                 bestmove = move;
+                print = "Svart: " + bestmove + " Hvit: " + bestmove2;
             }
-
         }
-        System.out.println("Beste score var: " + bestvalue);
-        System.out.println("Beste trekket var: " + bestmove);
+        System.out.println(print);
 
-
-
-        if(bestmove == null) System.out.println("Beste trekket finnes ikke!");
         return bestmove;
     }
 }

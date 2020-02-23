@@ -1,7 +1,7 @@
 package Chessbot2;
 
 //import javafx.geometry.Pos;
-
+import static Chessbot2.Search.*;
 import java.util.ArrayList;
 
 import static Chessbot2.Chess.*;
@@ -33,22 +33,29 @@ public class Game {
          */
         if(IsAMove(command)) {
             Tuple<Integer, Integer> com = parse(command);
-            if (currentBoard.check_player_move(com)) {
+            if (currentBoard.check_player_move(com)){
                 //Gjør trekk for spilleren
                 currentBoard = currentBoard.move(com);
+                paintPieces();
                 madeMoves.add(currentBoard);
                 black = true;
                 spillerstur = false;
-                paintPieces();
 
-                //Gjør trekk for botten
-                currentBoard = currentBoard.rotate();
-                iMove<Integer, Integer> botmove = Searcher.findMove(currentBoard);
-                botMove(botmove);
-                paintPieces();
-                black = false;
-                spillerstur = true;
-                return true;
+                try {
+                    //Gjør trekk for botten
+                    currentBoard = currentBoard.rotate();
+                    iMove<Integer, Integer> botmove = Searcher.findOkMove(currentBoard);//Searcher.findOkMove(currentBoard);
+                    botMove(botmove);
+                    paintPieces();
+                    black = false;
+                    spillerstur = true;
+                    return true;
+                }catch(Exception e){
+                    System.err.println("Botten fucket opp!");
+                    currentBoard = currentBoard.rotate();
+                    paintPieces();
+
+                }
 
 
             } else System.err.println("Not a legal move!");
@@ -79,4 +86,5 @@ public class Game {
         madeMoves.add(currentBoard);
         paintPieces();
     }
+    public Position getCurrentBoard() { return currentBoard; }
 }
