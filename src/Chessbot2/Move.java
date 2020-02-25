@@ -1,31 +1,44 @@
 package Chessbot2;
 
-public class Move<X, Y>
+public class Move implements Comparable
 {
-    X x;
-    Y y;
+    int x;
+    int y;
     boolean stabilityIndex;
     int weight;
 
-    public Move(X x, Y y)
+    public Move(int x, int y)
     {
         this.x = x;
         this.y = y;
     }
-    public Move(X x, Y y, boolean stabIndex, int weight)
+    public Move(int x, int y, boolean stabIndex, int weight)
     {
         this.x = x;
         this.y = y;
         this.stabilityIndex = stabIndex;
         this.weight = weight;
     }
-    public X getX() { return this.x; }
-    public Y getY() { return this.y; }
+    public int getX() { return this.x; }
+    public int getY() { return this.y; }
 
-    public void setX(X x) { this.x = x; }
-    public void setY(Y y) { this.y = y; }
+    public void setX(int x) { this.x = x; }
+    public void setY(int y) { this.y = y; }
 
     public String toString() {return "(" + this.x + ", " + this.y + ")"; }
 
-    public boolean equals(Move obj){ return (this.x == obj.getX() && this.y == obj.getY()); }
+    public boolean equals(Move obj) {
+        return (this.x == obj.getX() && this.y == obj.getY());
+    }
+
+    @Override
+    public int compareTo(Object m) 
+    {
+        Move i = (Move)m;
+        Integer foo = this.weight;
+        Integer bar = i.weight;
+
+        return foo.compareTo(bar);
+    }
+    
 }

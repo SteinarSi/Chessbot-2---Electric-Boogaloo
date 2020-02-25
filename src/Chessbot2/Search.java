@@ -10,18 +10,28 @@ public class Search
     static int plies = 3;
     static int alpha = -999999999;
     static int beta = 999999999;
+    List<Position> moves = new ArrayList<>();//Already known moves
 
     public static Move CalulateBestMove(Position board)
     {
         List<Move> moves = new ArrayList<>();
         for (Move move : board.gen_moves())
         {
-            moves.add((Move) move);
+            moves.add(move);
         }
         Move[] moveArr = new Move[moves.size()];
         for (int i=0; i<moves.size(); i++)
         {
-            moves.get(i).weight = AlphaBeta(moves.get(i), plies, alpha, beta, true, board);
+            try 
+            {
+                moves.get(i).weight = AlphaBeta(moves.get(i), plies, alpha, beta, true, board);
+            } 
+            catch (Exception e) 
+            {
+                e.getStackTrace();
+                e.getMessage();
+            }
+            
             moveArr[i] = moves.get(i);
         }
         Arrays.sort(moveArr);//sort all the scores
@@ -29,19 +39,17 @@ public class Search
         {
             System.out.println(move.weight);
         }
-        return moveArr[moveArr.length-1];//return the best move
+        return moveArr[moveArr.length - 1];//return the best move
     }
 
-    public static int AlphaBeta(Move node, int n, int alpha, int beta, boolean isMaximizingPlayer, Position board)
-    {
+    public static int AlphaBeta(Move node, int n, int alpha, int beta, boolean isMaximizingPlayer, Position board) {
         int value;
         Position currPos = board;
         Position tempPos;
         if ((n == 0) || node.stabilityIndex)
             //return the node weight if the node is stable or has reached sufficent depth
             return currPos.value(node);
-        if (isMaximizingPlayer)
-        {
+        if (isMaximizingPlayer) {
             value = -999999999;
             tempPos = currPos.move(node);//Simulate the move
             tempPos = tempPos.rotate();//Switch to other POV
@@ -54,8 +62,7 @@ public class Search
             }
             return value;
         }
-        if (!isMaximizingPlayer)
-        {
+        if (!isMaximizingPlayer) {
             value = 999999999;
             tempPos = currPos.move(node);//Simulate the move
             tempPos = tempPos.rotate();//Switch to other POV

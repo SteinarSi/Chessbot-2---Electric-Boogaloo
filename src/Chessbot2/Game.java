@@ -32,7 +32,7 @@ public class Game {
         f. eks "ijnsdfhjb e2e4 sdkjn sdfjl sd jsd  sdjnsd " er uforståelig og returnerer false uten å bli gjort.
          */
         if(IsAMove(command)) {
-            Move<Integer, Integer> com = parse(command);
+            Move com = parse(command);
             if (currentBoard.check_player_move(com)) {
                 //Gjør trekk for spilleren
                 currentBoard = currentBoard.move(com);
@@ -46,18 +46,19 @@ public class Game {
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();
-                    botmove = Search.CalulateBestMove(currentBoard);
-                    System.out.println(botmove);
+                    Move botmove = Search.CalulateBestMove(currentBoard);
                     botMove(botmove);
                     paintPieces();
                     black = false;
                     spillerstur = true;
                     return true;
-                } catch (Exception e) {
+                }catch(Exception e){
+                    e.printStackTrace();
+                    e.getMessage();
+                    
                     System.err.println("Botten fucket opp!");
                     currentBoard = currentBoard.rotate();
                     paintPieces();
-
                 }
 
 
@@ -78,7 +79,7 @@ public class Game {
             paintPieces();
         }else System.out.println("Can't go further back!");
     }
-    public void botMove(Move<Integer, Integer> command){
+    public void botMove(Move command){
         currentBoard = currentBoard.move(command);
         currentBoard = currentBoard.rotate();
         madeMoves.add(currentBoard);
