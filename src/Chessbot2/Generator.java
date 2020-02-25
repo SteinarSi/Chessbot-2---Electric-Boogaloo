@@ -172,7 +172,7 @@ public class Generator {
                 "rook_white"
         }) {
             try {
-                File temp = new File("Chessbot 2 - Electric Boogaloo\\src\\Chessbot2\\Sjakkbrikker\\" + name + ".png");
+                File temp = new File("src\\Chessbot2\\Sjakkbrikker\\" + name + ".png");
                 BufferedImage img = ImageIO.read(temp);
                 imageTable.put(name, img);
             } catch (IOException e) {
