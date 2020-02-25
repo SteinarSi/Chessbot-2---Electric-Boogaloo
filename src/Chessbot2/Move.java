@@ -1,6 +1,6 @@
 package Chessbot2;
 
-public class Move implements iMove, Comparable
+public class Move implements Comparable
 {
     int x;
     int y;

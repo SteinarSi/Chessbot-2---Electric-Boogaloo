@@ -33,14 +33,16 @@ public class Game {
          */
         if(IsAMove(command)) {
             Move com = parse(command);
-            if (currentBoard.check_player_move(com)){
+            if (currentBoard.check_player_move(com)) {
                 //Gjør trekk for spilleren
                 currentBoard = currentBoard.move(com);
                 paintPieces();
+                System.out.println("Nå skal botten gjøre noe");
                 madeMoves.add(currentBoard);
                 black = true;
                 spillerstur = false;
 
+                Move<Integer, Integer> botmove = null;
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();
@@ -53,9 +55,10 @@ public class Game {
                 }catch(Exception e){
                     e.printStackTrace();
                     e.getMessage();
+                    
+                    System.err.println("Botten fucket opp!");
                     currentBoard = currentBoard.rotate();
                     paintPieces();
-
                 }
 
 
