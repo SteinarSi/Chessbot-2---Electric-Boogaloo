@@ -37,16 +37,15 @@ public class Game {
                 //Gjør trekk for spilleren
                 currentBoard = currentBoard.move(com);
                 paintPieces();
-                System.out.println("Nå skal botten gjøre noe");
                 madeMoves.add(currentBoard);
                 black = true;
                 spillerstur = false;
 
-                Move<Integer, Integer> botmove = null;
+                Move botmove = null;
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();
-                    Move botmove = Search.CalulateBestMove(currentBoard);
+                    botmove = Searcher.findRandomMove(currentBoard);
                     botMove(botmove);
                     paintPieces();
                     black = false;
@@ -55,7 +54,6 @@ public class Game {
                 }catch(Exception e){
                     e.printStackTrace();
                     e.getMessage();
-                    
                     System.err.println("Botten fucket opp!");
                     currentBoard = currentBoard.rotate();
                     paintPieces();

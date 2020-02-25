@@ -6,13 +6,10 @@
       <change beforePath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Game.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Move.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Move.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Searcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Searcher.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/iMove.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Chessbot2/Chess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Chess.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Chessbot2/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Chessbot2/Move.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Move.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Chessbot2/Position.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Position.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Chessbot2/Search.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Search.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Chessbot2/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Searcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Chessbot2/iMove.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +28,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/IdeaProjects/INF101/inf101.v20.sem1" />
   </component>
   <component name="RunManager">
     <configuration name="Chess" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -67,26 +64,26 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="549" y="168" key="FileChooserDialogImpl" timestamp="1582630524829">
+    <state x="549" y="168" key="FileChooserDialogImpl" timestamp="1582636779159">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="168" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1582630524829" />
-    <state width="1493" height="136" key="GridCell.Tab.0.bottom" timestamp="1582633089009">
+    <state x="549" y="168" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1582636779159" />
+    <state width="1493" height="136" key="GridCell.Tab.0.bottom" timestamp="1582636780769">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="136" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1582633089009" />
-    <state width="1493" height="136" key="GridCell.Tab.0.center" timestamp="1582633089009">
+    <state width="1493" height="136" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1582636780769" />
+    <state width="1493" height="136" key="GridCell.Tab.0.center" timestamp="1582636780769">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="136" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1582633089009" />
-    <state width="1493" height="136" key="GridCell.Tab.0.left" timestamp="1582633089009">
+    <state width="1493" height="136" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1582636780769" />
+    <state width="1493" height="136" key="GridCell.Tab.0.left" timestamp="1582636780769">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="136" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1582633089009" />
-    <state width="1493" height="136" key="GridCell.Tab.0.right" timestamp="1582633089009">
+    <state width="1493" height="136" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1582636780769" />
+    <state width="1493" height="136" key="GridCell.Tab.0.right" timestamp="1582636780769">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="136" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1582633089009" />
+    <state width="1493" height="136" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1582636780769" />
     <state x="465" y="238" key="com.intellij.ide.util.TipDialog" timestamp="1582631445231">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

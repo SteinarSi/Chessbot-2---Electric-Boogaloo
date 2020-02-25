@@ -8,7 +8,7 @@ public class Searcher {
     static int depth = 3;
     private static String print;
 
-    public static Move findMove(Position currentBoard){
+    public static Move findRandomMove(Position currentBoard){
         Random random = new Random();
         ArrayList<Move> moves = currentBoard.gen_moves();
         return moves.get(random.nextInt(moves.size()));
@@ -25,7 +25,7 @@ public class Searcher {
             copy = copy.rotate();
 
             int bestvalue2 = -100_000_000;
-            iMove bestmove2 = null;
+            Move bestmove2 = null;
             ArrayList<Move> moves2 = copy.gen_moves();
             for(Move move2 : moves2){
                 int score2 = copy.value(move2);

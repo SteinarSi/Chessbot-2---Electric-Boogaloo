@@ -30,7 +30,6 @@ public class Move implements Comparable
     public boolean equals(Move obj) {
         return (this.x == obj.getX() && this.y == obj.getY());
     }
-
     @Override
     public int compareTo(Object m) 
     {

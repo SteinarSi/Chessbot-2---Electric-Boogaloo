@@ -152,8 +152,8 @@ public class Chess/* implements ActionListener*/ {
                 b.setMargin(buttonMargin);
                 ImageIcon icon = new ImageIcon(new BufferedImage(84, 84, BufferedImage.TYPE_INT_ARGB));
                 b.setIcon(icon);
-                if ((jj % 2 == 1 && ii % 2 == 1) || (jj % 2 == 0 && ii % 2 == 0)) b.setBackground(Color.LIGHT_GRAY);
-                else b.setBackground(Color.DARK_GRAY);
+                if ((jj % 2 == 1 && ii % 2 == 1) || (jj % 2 == 0 && ii % 2 == 0)) b.setBackground(Color.gray);
+                else b.setBackground(Color.lightGray);
                 chessBoardSquares[jj][ii] = b;
             }
         }
