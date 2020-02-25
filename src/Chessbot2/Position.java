@@ -40,7 +40,7 @@ public class Position implements Comparable<Position> {
          */
 
         boolean ret = false;
-        ArrayList<Move<Integer, Integer>> genmoves = gen_moves(); //Opretter en liste over nesten-lovlige trekk.
+        ArrayList<Move> genmoves = gen_moves(); //Opretter en liste over nesten-lovlige trekk.
         for(Move genmove : genmoves) {
             if (genmove.equals(move)) {
                 ret = true; //Om trekket er med i listen over nesten-lovligetrekk.
@@ -51,12 +51,12 @@ public class Position implements Comparable<Position> {
             copy = copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det ville sett ut om spilleren hadde gjort det valgte trekket.
             copy = copy.rotate();
             int King = 0;
-            ArrayList<Move<Integer, Integer>> botmoves = copy.gen_moves();
+            ArrayList<Move> botmoves = copy.gen_moves();
             for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
                 if(copy.board.charAt(i) == 'k') King = i;
             }
             for(int i=0; i<botmoves.size(); i++) {
-                Move<Integer, Integer> mellom = botmoves.get(i);
+                Move mellom = botmoves.get(i);
                 if (mellom.getY() == King) {
                     System.err.println("Don't put your king in check!");
                     return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
@@ -66,12 +66,12 @@ public class Position implements Comparable<Position> {
         return ret;
     }
 
-    public ArrayList<Move<Integer, Integer>> gen_moves(){
+    public ArrayList<Move> gen_moves(){
         /* En funksjon som genererer en ArrayList av nesten-lovlige trekk en spiller har lov til å gjøre.
         Tar ikke hensyn til om trekket setter kongen i sjakk eller ikke, det må botten regne ut selv.
         Spillerens trekk kan sjekkes med check_player_move.
          */
-        ArrayList<Move<Integer, Integer>> lovligliste = new ArrayList<>();
+        ArrayList<Move> lovligliste = new ArrayList<>();
         for (int fra = 0; fra < board.length(); fra++) {
             char brikke = board.charAt(fra);
             if (!Character.isUpperCase(brikke)) {
@@ -148,7 +148,7 @@ public class Position implements Comparable<Position> {
         return new String(chars);
     }
 
-    public Position move(Move<Integer, Integer> move){
+    public Position move(Move move){
         /* Tar f. eks Tuple(85, 65) som input, IKKE Tuple(e2, e4).
         Returnerer ett nytt brett, der trekket er blitt gjort.
         Den oppdaterer også betingelser for rokade, osv.
@@ -225,7 +225,7 @@ public class Position implements Comparable<Position> {
         return new Position(newboard.toString(), score, WC, BC, ep, kp); //Returnerer et nytt brett, der trekket er gjort
     }
 
-    public int value(Move<Integer, Integer> move) {
+    public int value(Move move) {
         /* Returnerer verdien til et spesifikt trekk.
         Om du tar en dronning sier denne "bra, +879 poeng",
         og om du flytter hesten ned til høyre hjørne sier han "Hva faen, -131 poeng".

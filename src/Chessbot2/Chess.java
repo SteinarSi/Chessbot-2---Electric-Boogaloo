@@ -177,7 +177,7 @@ public class Chess/* implements ActionListener*/ {
     }
     public final JComponent getGui() { return gui; }
 
-    public static Move<Integer, Integer> parse(String c){
+    public static Move parse(String c){
         /*Den andre funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne oversetter spillerens streng til et trekk som Position og Game kan forstå.
         IsAMove -> parse -> check_player_move
