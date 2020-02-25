@@ -14,7 +14,7 @@ public class Search
     public static Move CalulateBestMove(Position board)
     {
         List<Move> moves = new ArrayList<>();
-        for (Move move : board.gen_moves(false))
+        for (Move move : board.gen_moves())
         {
             moves.add((Move) move);
         }
@@ -45,9 +45,9 @@ public class Search
             value = -999999999;
             tempPos = currPos.move(node);//Simulate the move
             tempPos = tempPos.rotate();//Switch to other POV
-            for (Move move : tempPos.gen_moves(false)) //generate sub-nodes
+            for (Move move : tempPos.gen_moves()) //generate sub-nodes
             {
-                value = Math.max(value, AlphaBeta((Move) move, n - 1, alpha, beta, false, tempPos));//sim next
+                value = Math.max(value, AlphaBeta(Move move, n - 1, alpha, beta, false, tempPos));//sim next
                 alpha = Math.max(alpha, value);
                 if (alpha >= beta)
                     break;
@@ -59,9 +59,9 @@ public class Search
             value = 999999999;
             tempPos = currPos.move(node);//Simulate the move
             tempPos = tempPos.rotate();//Switch to other POV
-            for (Move move : tempPos.gen_moves(false)) //Gen sub-nodes
+            for (Move move : tempPos.gen_moves()) //Gen sub-nodes
             {
-                value = Math.min(value, AlphaBeta((Move) move, n - 1, alpha, beta, true, tempPos));
+                value = Math.min(value, AlphaBeta(move, n - 1, alpha, beta, true, tempPos));
                 beta = Math.min(beta, value);
                 if (alpha >= beta)
                     break;
@@ -77,7 +77,7 @@ public class Search
         Position currPos = board;
         Position tempPos = currPos.move(move);
         tempPos = tempPos.rotate();
-        for (Move i : tempPos.gen_moves(false))
+        for (Move i : tempPos.gen_moves())
         {
             if(tempPos.value(i) > stabilityCriteria)
                 return false;
