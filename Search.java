@@ -10,8 +10,8 @@ import java.util.*;
 public class Search
 {
     static int plies = 10;
-    static int alpha = 999999999;
-    static int beta = -999999999;
+    static int alpha = -999999999;
+    static int beta = 999999999;
 
     public static Move CalulateBestMove(Position board)
     {
