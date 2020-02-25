@@ -42,7 +42,7 @@ public class Game {
                 black = true;
                 spillerstur = false;
 
-                Move<Integer, Integer> botmove = null;
+                Move botmove = null;
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();
