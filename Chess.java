@@ -72,21 +72,17 @@ public class Chess/* implements ActionListener*/ {
     }
 
     public static void main(String[] args) {
-        // TODO: 03.02.2020 Skriv hele main på nytt
         game = new Game();
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                Chess cb = new Chess();
-                JFrame frame = new JFrame("Chessbot2");
-                frame.add(cb.getGui());
-                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                frame.setLocationByPlatform(true);
-                frame.pack();
-                frame.setMinimumSize(frame.getSize());
-                frame.setVisible(true);
-                paintPieces();
-            }
+        Runnable r = () -> {
+            Chess cb = new Chess();
+            JFrame frame = new JFrame("Chessbot2");
+            frame.add(cb.getGui());
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setLocationByPlatform(true);
+            frame.pack();
+            frame.setMinimumSize(frame.getSize());
+            paintPieces();
+            frame.setVisible(true);
         };
         SwingUtilities.invokeLater(r);
 
@@ -113,8 +109,9 @@ public class Chess/* implements ActionListener*/ {
             ImageIcon icon = new ImageIcon(new BufferedImage(60, 60, BufferedImage.TYPE_INT_ARGB));
 
             //Gir ruten et bilde av en brikke, om det står en brikke oppå den. Om ikke blir bildet bare blankt.
-            if(charToString.containsKey(currentBoard.charAt(i))) icon.setImage(piecedict.get(charToString.get(currentBoard.charAt(i))));
-
+            if(charToString.containsKey(currentBoard.charAt(i))) {
+                icon.setImage(piecedict.get(charToString.get(currentBoard.charAt(i))));
+            }
             chessBoardSquares[X-1][Y].setIcon(icon);
         }
     }
@@ -180,7 +177,7 @@ public class Chess/* implements ActionListener*/ {
     }
     public final JComponent getGui() { return gui; }
 
-    public static Tuple<Integer, Integer> parse(String c){
+    public static Move<Integer, Integer> parse(String c){
         /*Den andre funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne oversetter spillerens streng til et trekk som Position og Game kan forstå.
         IsAMove -> parse -> check_player_move
@@ -198,7 +195,7 @@ public class Chess/* implements ActionListener*/ {
         int ranktil = c.charAt(3) - '1';
         int y = A1 + filtil - 10*ranktil; //Koordinat til
 
-        return new Tuple(x, y);
+        return new Move(x, y);
     }
     public static boolean IsAMove(String input){
         /* Den første funksjonen for å sjekke lovligheten til spillerens trekk.

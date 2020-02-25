@@ -31,7 +31,7 @@ public class Position implements Comparable<Position> {
         this.kp = kp;
     }
 
-    public boolean check_player_move(iMove<Integer, Integer> move){
+    public boolean check_player_move(Move move){
         /* Den tredje og siste funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne sjekker om spilleren har noen brikker som kan flytte der,
         og dobbelsjekker at spilleren ikke har prøvd å sette seg selv i sjakk eller noe annet lurt.
@@ -40,10 +40,9 @@ public class Position implements Comparable<Position> {
          */
 
         boolean ret = false;
-        ArrayList<iMove<Integer, Integer>> genmoves = gen_moves(true); //Opretter en liste over nesten-lovlige trekk.
-        for(iMove genmove : genmoves) {
-            Tuple<Integer, Integer> tuppel = new Tuple(genmove.getX(), genmove.getY());
-            if (tuppel.equals(move)) {
+        ArrayList<Move<Integer, Integer>> genmoves = gen_moves(); //Opretter en liste over nesten-lovlige trekk.
+        for(Move genmove : genmoves) {
+            if (genmove.equals(move)) {
                 ret = true; //Om trekket er med i listen over nesten-lovligetrekk.
             }
         }
@@ -52,12 +51,12 @@ public class Position implements Comparable<Position> {
             copy = copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det ville sett ut om spilleren hadde gjort det valgte trekket.
             copy = copy.rotate();
             int King = 0;
-            ArrayList<iMove<Integer, Integer>> botmoves = copy.gen_moves(true);
+            ArrayList<Move<Integer, Integer>> botmoves = copy.gen_moves();
             for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
                 if(copy.board.charAt(i) == 'k') King = i;
             }
             for(int i=0; i<botmoves.size(); i++) {
-                iMove<Integer, Integer> mellom = botmoves.get(i);
+                Move<Integer, Integer> mellom = botmoves.get(i);
                 if (mellom.getY() == King) {
                     System.err.println("Don't put your king in check!");
                     return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
@@ -67,12 +66,12 @@ public class Position implements Comparable<Position> {
         return ret;
     }
 
-    public ArrayList<iMove<Integer, Integer>> gen_moves(boolean movetype){
-        // TODO: 30.01.2020 Yield
-        /* En funksjon som genererer en Array av lovlige trekk en spiller har lov til å gjøre.
-        Laget med hensyn på en bot, vi kan senere implementere noe yield-shit istedenfor lister.
+    public ArrayList<Move<Integer, Integer>> gen_moves(){
+        /* En funksjon som genererer en ArrayList av nesten-lovlige trekk en spiller har lov til å gjøre.
+        Tar ikke hensyn til om trekket setter kongen i sjakk eller ikke, det må botten regne ut selv.
+        Spillerens trekk kan sjekkes med check_player_move.
          */
-        ArrayList<iMove<Integer, Integer>> lovligliste = new ArrayList<>();
+        ArrayList<Move<Integer, Integer>> lovligliste = new ArrayList<>();
         for (int fra = 0; fra < board.length(); fra++) {
             char brikke = board.charAt(fra);
             if (!Character.isUpperCase(brikke)) {
@@ -81,21 +80,17 @@ public class Position implements Comparable<Position> {
             //Sjekker om rokering er lovlig, legger det til i listen
             if(black) {
                 if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
-                    if(movetype) lovligliste.add(new Tuple(95, 93)); //Svart rokerer langt
-                    else lovligliste.add(new Move(95, 93));
+                    lovligliste.add(new Move(95, 93));
                 }
                 if ((brikke == 'K' && (boolean) BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
-                    if(movetype) lovligliste.add(new Tuple(95, 97)); //Svart rokerer kort
-                    else lovligliste.add(new Move(95, 97));
+                    lovligliste.add(new Move(95, 97));
                 }
             } else {
                 if ((brikke == 'K' && (boolean) WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
-                    if(movetype) lovligliste.add(new Tuple(95, 93)); //Hvit rokerer langt
-                    else lovligliste.add(new Move(95, 93));
+                    lovligliste.add(new Move(95, 93));
                 }
                 if ((brikke == 'K' && (boolean) WC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
-                    if(movetype) lovligliste.add(new Tuple(95, 97)); //Hvit rokerer kort
-                    else lovligliste.add(new Move(95, 97));
+                    lovligliste.add(new Move(95, 97));
 
                 }
             }
@@ -114,10 +109,10 @@ public class Position implements Comparable<Position> {
                         if ((retning == N + E || retning == N + W) && mål == '.' && til != ep) break;  //Om bonden prøver å gå skrått, og det ikke er mulig å ta en passant der.
                     }
                     //Om det genererte trekket har kommet helt ned hit uten å bli brutt, er det offisielt et lovlig trekk, som botten må inspisere.
-                    if(movetype) lovligliste.add(new Tuple(fra, til));
-                    else lovligliste.add(new Move(fra, til));
+                    lovligliste.add(new Move(fra, til));
 
                     //Om brikken bare kan flyttet et steg om gangen, vil dette bryte loopen etter det steget er lagt til.
+                    //Brikker som kan flytte flere skritt vil fortsette å se etter ruter i samme himmelretning.
                     if (brikke == 'P' || brikke == 'N' || brikke == 'K' || Character.isLowerCase(mål)) break;
                 }
             }
@@ -153,7 +148,7 @@ public class Position implements Comparable<Position> {
         return new String(chars);
     }
 
-    public Position move(iMove<Integer, Integer> move){
+    public Position move(Move<Integer, Integer> move){
         /* Tar f. eks Tuple(85, 65) som input, IKKE Tuple(e2, e4).
         Returnerer ett nytt brett, der trekket er blitt gjort.
         Den oppdaterer også betingelser for rokade, osv.
@@ -185,12 +180,12 @@ public class Position implements Comparable<Position> {
             if(til == 97){ //Flytter tårnet om du rokerer kort.
                 newboard.setCharAt(98, '.');
                 newboard.setCharAt(96, 'R');
-                score += value(new Tuple(98, 96));
+                score += value(new Move(98, 96));
             }
             if(til == 92){ //Flytter tårnet om du rokerer langt.
                 newboard.setCharAt(91, '.');
                 newboard.setCharAt(93, 'R');
-                score += value(new Tuple(91, 93));
+                score += value(new Move(91, 93));
             }
         }
         if(brikke == 'P') {
@@ -230,7 +225,7 @@ public class Position implements Comparable<Position> {
         return new Position(newboard.toString(), score, WC, BC, ep, kp); //Returnerer et nytt brett, der trekket er gjort
     }
 
-    public int value(iMove<Integer, Integer> move) {
+    public int value(Move<Integer, Integer> move) {
         /* Returnerer verdien til et spesifikt trekk.
         Om du tar en dronning sier denne "bra, +879 poeng",
         og om du flytter hesten ned til høyre hjørne sier han "Hva faen, -131 poeng".

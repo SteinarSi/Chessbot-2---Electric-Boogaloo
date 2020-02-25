@@ -32,7 +32,7 @@ public class Game {
         f. eks "ijnsdfhjb e2e4 sdkjn sdfjl sd jsd  sdjnsd " er uforståelig og returnerer false uten å bli gjort.
          */
         if(IsAMove(command)) {
-            Tuple<Integer, Integer> com = parse(command);
+            Move<Integer, Integer> com = parse(command);
             if (currentBoard.check_player_move(com)){
                 //Gjør trekk for spilleren
                 currentBoard = currentBoard.move(com);
@@ -44,7 +44,7 @@ public class Game {
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();
-                    iMove<Integer, Integer> botmove = Searcher.findOkMove(currentBoard);//Searcher.findOkMove(currentBoard);
+                    Move<Integer, Integer> botmove = Searcher.findOkMove(currentBoard);
                     botMove(botmove);
                     paintPieces();
                     black = false;
@@ -75,7 +75,7 @@ public class Game {
             paintPieces();
         }else System.out.println("Can't go further back!");
     }
-    public void botMove(iMove<Integer, Integer> command){
+    public void botMove(Move<Integer, Integer> command){
         currentBoard = currentBoard.move(command);
         currentBoard = currentBoard.rotate();
         madeMoves.add(currentBoard);
