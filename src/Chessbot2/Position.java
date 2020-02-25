@@ -157,7 +157,8 @@ public class Position implements Comparable<Position> {
         int til = move.getY();
         char brikke = board.charAt(fra);
 
-        score += value(move);
+        if(!spillerstur) score += value(move);
+        else score -= value(move);
 
         //Flytter brikken
         StringBuilder newboard = new StringBuilder(board);

@@ -47,7 +47,7 @@ public class Search
             tempPos = tempPos.rotate();//Switch to other POV
             for (Move move : tempPos.gen_moves()) //generate sub-nodes
             {
-                value = Math.max(value, AlphaBeta(Move move, n - 1, alpha, beta, false, tempPos));//sim next
+                value = Math.max(value, AlphaBeta(move, n - 1, alpha, beta, false, tempPos));//sim next
                 alpha = Math.max(alpha, value);
                 if (alpha >= beta)
                     break;
@@ -84,5 +84,4 @@ public class Search
         }
         return true;
     }
-
 }

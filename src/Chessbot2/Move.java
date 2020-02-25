@@ -1,6 +1,6 @@
 package Chessbot2;
 
-public class Move<X, Y> implements iMove<X, Y>
+public class Move<X, Y>
 {
     X x;
     Y y;

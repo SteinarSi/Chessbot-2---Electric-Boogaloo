@@ -25,7 +25,7 @@ public class Searcher {
             copy = copy.rotate();
 
             int bestvalue2 = -100_000_000;
-            iMove<Integer, Integer> bestmove2 = null;
+            Move<Integer, Integer> bestmove2 = null;
             ArrayList<Move<Integer, Integer>> moves2 = copy.gen_moves();
             for(Move<Integer, Integer> move2 : moves2){
                 int score2 = copy.value(move2);
