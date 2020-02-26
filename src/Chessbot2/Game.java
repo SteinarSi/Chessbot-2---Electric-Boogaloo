@@ -40,8 +40,11 @@ public class Game {
                 madeMoves.add(currentBoard);
                 black = true;
                 spillerstur = false;
+<<<<<<< HEAD
 
                 Move botmove = null;
+=======
+>>>>>>> e09b009009fe1b7b9656ab18ab0d9aaf0934f6ab
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();

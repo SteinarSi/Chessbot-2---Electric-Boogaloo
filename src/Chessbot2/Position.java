@@ -155,10 +155,11 @@ public class Position implements Comparable<Position> {
          */
         int fra = move.getX();
         int til = move.getY();
+        int newScore = score;
         char brikke = board.charAt(fra);
 
-        if(!spillerstur) score += value(move);
-        else score -= value(move);
+        if(!spillerstur) newScore += value(move);
+        else newScore -= value(move);
 
         //Flytter brikken
         StringBuilder newboard = new StringBuilder(board);
@@ -181,12 +182,12 @@ public class Position implements Comparable<Position> {
             if(til == 97){ //Flytter tårnet om du rokerer kort.
                 newboard.setCharAt(98, '.');
                 newboard.setCharAt(96, 'R');
-                score += value(new Move(98, 96));
+                newScore += value(new Move(98, 96));
             }
             if(til == 92){ //Flytter tårnet om du rokerer langt.
                 newboard.setCharAt(91, '.');
                 newboard.setCharAt(93, 'R');
-                score += value(new Move(91, 93));
+                newScore += value(new Move(91, 93));
             }
         }
         if(brikke == 'P') {
@@ -223,7 +224,7 @@ public class Position implements Comparable<Position> {
             TeP -= 1;
             if(TeP == 0) ep = 0; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
-        return new Position(newboard.toString(), score, WC, BC, ep, kp); //Returnerer et nytt brett, der trekket er gjort
+        return new Position(newboard.toString(), newScore, WC, BC, ep, kp); //Returnerer et nytt brett, der trekket er gjort
     }
 
     public int value(Move move) {
