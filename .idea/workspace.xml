@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="989b379d-5592-4134-812c-136d21f57d61" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Game.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Move.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Move.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Searcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Chessbot-2---Electric-Boogaloo/Chessbot2/Searcher.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Chessbot2/Chess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Chess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Chessbot2/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Chessbot2/Move.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Move.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Chessbot2/Searcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Chessbot2/Searcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Chessbot-2---Electric-Boogaloo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Chessbot-2---Electric-Boogaloo.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +54,18 @@
       <option name="presentableId" value="Default" />
       <updated>1582630161860</updated>
     </task>
+    <task id="LOCAL−00001" summary="Fjernet Kotlin, fordi vi ikke brukte den.">
+      <created>1582727422411</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1582727422411</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fjernet Kotlin, fordi vi ikke brukte den." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fjernet Kotlin, fordi vi ikke brukte den." />
   </component>
   <component name="WindowStateProjectService">
     <state x="288" y="8" key="CommitChangelistDialog2" timestamp="1582727421599">
