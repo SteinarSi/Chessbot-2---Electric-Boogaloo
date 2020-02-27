@@ -44,7 +44,9 @@ public class Game {
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();
-                    botmove = Searcher.findRandomMove(currentBoard);
+                    if(botvalg == "1") botmove = Searcher.findOkMove(currentBoard);
+                    else if(botvalg == "2") botmove = Search.CalulateBestMove(currentBoard);
+                    else botmove = Searcher.findRandomMove(currentBoard);
                     botMove(botmove);
                     paintPieces();
                     black = false;

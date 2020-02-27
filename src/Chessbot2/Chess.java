@@ -52,6 +52,7 @@ public class Chess/* implements ActionListener*/ {
     static int TeP = 0; //Passanttelleren
     static Character nybrikke;
     static boolean promotert = false;
+    public static String botvalg = "1";
 
     public static Game game;
     public static String usertext;
@@ -82,7 +83,9 @@ public class Chess/* implements ActionListener*/ {
             frame.pack();
             frame.setMinimumSize(frame.getSize());
             paintPieces();
-            frame.setVisible(true);
+            frame.setVisible(true);Object result = JOptionPane.showInputDialog(gui, "1: FindOkMove\n 2: CalculateBestMove\n 3: FindRandomMove");
+            if(result.equals("1") || result.equals("2") || result.equals("3")) botvalg = result.toString();
+
         };
         SwingUtilities.invokeLater(r);
 
