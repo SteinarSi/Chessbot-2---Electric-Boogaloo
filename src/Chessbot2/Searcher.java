@@ -1,11 +1,12 @@
 package Chessbot2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Searcher {
 
-    static int depth = 3;
+    static int depth = 5;
     private static String print;
 
     public static Move findRandomMove(Position currentBoard){
@@ -14,6 +15,58 @@ public class Searcher {
         return moves.get(random.nextInt(moves.size()));
 
     }
+    public static Move findRecursiveMove(Position currentBoard){
+        ArrayList<Move> possiblemoves = currentBoard.gen_moves();
+        for(Move move : possiblemoves){
+            move.addWeight(currentBoard.value(move));
+        }
+        Collections.sort(possiblemoves, Collections.reverseOrder());
+        for(int i=0; i<= (possiblemoves.size()/2)+1; i++){
+            Move move = possiblemoves.get(i);
+            System.out.println("Topptrekk: " + move);
+            move.addWeight(RecursiveValue(currentBoard, move, depth, false));
+            System.out.println("verdi: " + move.getWeight());
+        }
+        Collections.sort(possiblemoves, Collections.reverseOrder());
+        return possiblemoves.get(0);
+    }
+    public static int RecursiveValue(Position currentBoard, Move move, int depth, boolean Max){
+        if(depth>0){
+            int ret = currentBoard.value(move);
+            currentBoard = currentBoard.move(move);
+            currentBoard = currentBoard.rotate();
+
+            //Om det er botten sin tur
+            if(Max){
+                ArrayList<Move> responses = currentBoard.gen_moves();
+                for(Move response : responses) response.addWeight(currentBoard.value(response));
+
+                Collections.sort(responses, Collections.reverseOrder());
+                for(int i=0; i<= responses.size()/2+1; i++){
+                    Move response = responses.get(i);
+                    response.addWeight(RecursiveValue(currentBoard, response, depth-1, false));
+                }
+                Collections.sort(responses, Collections.reverseOrder());
+                return ret + responses.get(0).getWeight();
+            }
+
+            //Om det er spillerens tur
+            else {
+                ArrayList<Move> responses = currentBoard.gen_moves();
+                for (Move response : responses) response.addWeight(currentBoard.value(response));
+
+                Collections.sort(responses, Collections.reverseOrder());
+                for (int i = 0; i <= responses.size() / 2 + 1; i++) {
+                    Move response = responses.get(i);
+                    response.addWeight(RecursiveValue(currentBoard, response, depth - 1, true));
+                }
+                Collections.sort(responses, Collections.reverseOrder());
+                return ret - responses.get(0).getWeight();
+            }
+        }
+        else return 0;
+    }
+
     public static Move findOkMove(Position currentBoard){
         int bestvalue = -100_000_000;
         Move bestmove = null;

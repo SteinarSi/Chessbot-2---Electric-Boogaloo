@@ -46,7 +46,8 @@ public class Game {
                     currentBoard = currentBoard.rotate();
                     if(botvalg == "1") botmove = Searcher.findOkMove(currentBoard);
                     else if(botvalg == "2") botmove = Search.CalulateBestMove(currentBoard);
-                    else botmove = Searcher.findRandomMove(currentBoard);
+                    else if(botvalg == "3")botmove = Searcher.findRandomMove(currentBoard);
+                    else botmove = Searcher.findRecursiveMove(currentBoard);
                     botMove(botmove);
                     paintPieces();
                     black = false;

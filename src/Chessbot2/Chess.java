@@ -83,8 +83,8 @@ public class Chess/* implements ActionListener*/ {
             frame.pack();
             frame.setMinimumSize(frame.getSize());
             paintPieces();
-            frame.setVisible(true);Object result = JOptionPane.showInputDialog(gui, "1: FindOkMove\n 2: CalculateBestMove\n 3: FindRandomMove");
-            if(result.equals("1") || result.equals("2") || result.equals("3")) botvalg = result.toString();
+            frame.setVisible(true);Object result = JOptionPane.showInputDialog(gui, "1: FindOkMove\n 2: CalculateBestMove\n 3: FindRandomMove\n 4: FindRecursiveMove");
+            botvalg = result.toString();
 
         };
         SwingUtilities.invokeLater(r);

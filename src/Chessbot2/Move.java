@@ -11,6 +11,8 @@ public class Move implements Comparable
     {
         this.x = x;
         this.y = y;
+        this.weight = 0;
+        this.stabilityIndex = false;
     }
     public Move(int x, int y, boolean stabIndex, int weight)
     {
@@ -21,9 +23,11 @@ public class Move implements Comparable
     }
     public int getX() { return this.x; }
     public int getY() { return this.y; }
+    public int getWeight() {return this.weight; }
 
     public void setX(int x) { this.x = x; }
     public void setY(int y) { this.y = y; }
+    public void addWeight(int n) {this.weight += n; }
 
     public String toString() {return "(" + this.x + ", " + this.y + ")"; }
 
@@ -39,5 +43,5 @@ public class Move implements Comparable
 
         return foo.compareTo(bar);
     }
-    
+
 }
