@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class Searcher {
 
-    static int depth = 5;
+    static int depth = 4;
     private static String print;
 
     public static Move findRandomMove(Position currentBoard){
