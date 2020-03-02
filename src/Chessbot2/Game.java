@@ -30,7 +30,7 @@ public class Game {
 
     public static String getBoard() { return currentBoard.getBoard(); }
 
-    public boolean playerMove(String command) {
+    public void playerMove(String command) {
         /* Forsøker å gjøre spillerens trekk.
         Tar hvilken som helst streng som input,
         og forsøker å oversette det til en tuppel før den sender det til Position og gjør trekket.
@@ -47,31 +47,10 @@ public class Game {
                 madeMoves.add(currentBoard);
                 black = true;
                 spillerstur = false;
-                Move botmove = null;
-                try {
-                    //Gjør trekk for botten
-                    currentBoard = currentBoard.rotate();
-                    if(findOkMove) botmove = Searcher.findOkMove(currentBoard);
-                    else if(CalculateBestMove) botmove = Search.CalulateBestMove(currentBoard);
-                    else if(findRecursiveMove) botmove = Searcher.findRecursiveMove(currentBoard);
-                    else botmove = Searcher.findRandomMove(currentBoard);
-                    botMove(botmove);
-                    paintPieces();
-                    black = false;
-                    spillerstur = true;
-                    return true;
-                }catch(Exception e){
-                    e.printStackTrace();
-                    e.getMessage();
-                    System.err.println("Botten fucket opp!");
-                    currentBoard = currentBoard.rotate();
-                    paintPieces();
-                }
-
+                botMove();
 
             } else System.err.println("Not a legal move!");
         } else System.err.println("Try typing a move on the format 'letter number letter number'");
-        return false;
     }
 
     public void back() {
@@ -84,12 +63,32 @@ public class Game {
             madeMoves.remove(madeMoves.size() - 1);
             currentBoard = madeMoves.get(madeMoves.size()-1);
             paintPieces();
-        }else System.out.println("Can't go further back!");
+        }else System.err.println("Can't go further back!");
     }
-    public void botMove(Move command){
-        currentBoard = currentBoard.move(command);
-        currentBoard = currentBoard.rotate();
-        madeMoves.add(currentBoard);
+    public void botMove(){
+        Move botmove;
+        try {
+            //Velger hvilken bot som skal brukes
+            currentBoard = currentBoard.rotate();
+            if(findOkMove) botmove = Searcher.findOkMove(currentBoard);
+            else if(CalculateBestMove) botmove = Search.CalulateBestMove(currentBoard);
+            else if(findRecursiveMove)botmove = Searcher.findRecursiveMove(currentBoard);
+            else botmove = Searcher.findRandomMove(currentBoard);
+
+            currentBoard = currentBoard.move(botmove);
+            currentBoard = currentBoard.rotate();
+            madeMoves.add(currentBoard);
+            paintPieces();
+            black = false;
+            spillerstur = true;
+
+        }catch(Exception e){
+            e.printStackTrace();
+            e.getMessage();
+            System.err.println("Botten fucket opp!");
+            currentBoard = currentBoard.rotate();
+            paintPieces();
+        }
     }
 
     public static void chooseBot(){
@@ -119,5 +118,5 @@ public class Game {
         paintPieces();
         chooseBot();
     }
-    public Position getCurrentBoard() { return currentBoard; }
+    public static Position getCurrentBoard() { return currentBoard; }
 }
