@@ -1,6 +1,8 @@
 package Chessbot2;
 
 //import javafx.geometry.Pos;
+import javax.swing.*;
+
 import static Chessbot2.Search.*;
 import java.util.ArrayList;
 
@@ -10,6 +12,11 @@ public class Game {
 
     static ArrayList<Position> madeMoves;
     static Position currentBoard;
+
+    //Valg av bot som skal brukes, om alle er false brukes findRandomMove
+    static boolean findRecursiveMove = false;
+    static boolean findOkMove = false;
+    static boolean CalculateBestMove = false;
 
     public Game(){
         madeMoves = new ArrayList<>();
@@ -44,10 +51,10 @@ public class Game {
                 try {
                     //Gjør trekk for botten
                     currentBoard = currentBoard.rotate();
-                    if(botvalg == "1") botmove = Searcher.findOkMove(currentBoard);
-                    else if(botvalg == "2") botmove = Search.CalulateBestMove(currentBoard);
-                    else if(botvalg == "3")botmove = Searcher.findRandomMove(currentBoard);
-                    else botmove = Searcher.findRecursiveMove(currentBoard);
+                    if(findOkMove) botmove = Searcher.findOkMove(currentBoard);
+                    else if(CalculateBestMove) botmove = Search.CalulateBestMove(currentBoard);
+                    else if(findRecursiveMove) botmove = Searcher.findRecursiveMove(currentBoard);
+                    else botmove = Searcher.findRandomMove(currentBoard);
                     botMove(botmove);
                     paintPieces();
                     black = false;
@@ -84,11 +91,33 @@ public class Game {
         currentBoard = currentBoard.rotate();
         madeMoves.add(currentBoard);
     }
+
+    public static void chooseBot(){
+        Object result = JOptionPane.showInputDialog(gui, "Select bot:\n1: FindOkMove\n 2: CalculateBestMove\n 3: FindRecursiveMove");
+        botvalg = result.toString().charAt(0);
+        if(botvalg == '1') {
+            findOkMove = true;
+            System.out.println("Bot selected: findOkMove");
+        }
+        else if(botvalg == '2') {
+            CalculateBestMove = true;
+            System.out.println("Bot selected: CalculateBestMove");
+        }
+        else if(botvalg == '3') {
+            findRecursiveMove = true;
+            System.out.println("Bot selected: findRecursiveMove");
+        }
+        else{
+            System.out.println("No bot selected. Will perform random moves.");
+        }
+    }
+
     public void newGame(){
         madeMoves.clear();
         currentBoard = new Position(board, 0, new Tuple(true, true), new Tuple(true, true), 0, true);
         madeMoves.add(currentBoard);
         paintPieces();
+        chooseBot();
     }
     public Position getCurrentBoard() { return currentBoard; }
 }

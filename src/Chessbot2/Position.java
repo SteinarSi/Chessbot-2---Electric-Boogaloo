@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import static Chessbot2.Chess.*;
 
@@ -239,7 +240,9 @@ public class Position implements Comparable<Position> {
         char brikke = board.charAt(fra);
         char dreptbrikke = board.charAt(til);
 
-        int deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
+        int deltascore = 0;
+        if (brikke == '.') System.out.println("Hva faen, brikken er et et punktum?");
+        else deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
 
         if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til] + pieceValue.get(Character.toUpperCase(dreptbrikke));
 

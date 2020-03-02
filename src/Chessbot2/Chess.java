@@ -52,7 +52,7 @@ public class Chess/* implements ActionListener*/ {
     static int TeP = 0; //Passanttelleren
     static Character nybrikke;
     static boolean promotert = false;
-    public static String botvalg = "1";
+    public static char botvalg = '1';
 
     public static Game game;
     public static String usertext;
@@ -83,8 +83,8 @@ public class Chess/* implements ActionListener*/ {
             frame.pack();
             frame.setMinimumSize(frame.getSize());
             paintPieces();
-            frame.setVisible(true);Object result = JOptionPane.showInputDialog(gui, "1: FindOkMove\n 2: CalculateBestMove\n 3: FindRandomMove\n 4: FindRecursiveMove");
-            botvalg = result.toString();
+            frame.setVisible(true);
+            Game.chooseBot();
 
         };
         SwingUtilities.invokeLater(r);
@@ -127,10 +127,8 @@ public class Chess/* implements ActionListener*/ {
         toolbar2.add(neww);
         toolbar2.add(back);
         gui.add(toolbar2, BorderLayout.PAGE_START);
-
         JToolBar toolbar = new JToolBar();
         gui.add(toolbar, BorderLayout.PAGE_END);
-
         JTextField text = new JTextField(20);
         textField = text;
         toolbar.add(text);
@@ -141,7 +139,6 @@ public class Chess/* implements ActionListener*/ {
         neww.addActionListener(new Action());
         toolbar.add(enter);
         gui.add(new JLabel("?"), BorderLayout.LINE_START);
-
         chessBoard = new JPanel(new GridLayout(0, 8));
         chessBoard.setBorder(new LineBorder(Color.BLACK));
         gui.add(chessBoard);
