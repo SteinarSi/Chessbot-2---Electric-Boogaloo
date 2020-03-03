@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import static Chessbot2.Search.*;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static Chessbot2.Chess.*;
 
@@ -17,6 +18,7 @@ public class Game {
     static boolean findRecursiveMove = false;
     static boolean findOkMove = false;
     static boolean CalculateBestMove = false;
+    static boolean findFilthyMove = false;
 
     public Game(){
         madeMoves = new ArrayList<>();
@@ -73,6 +75,7 @@ public class Game {
             if(findOkMove) botmove = Searcher.findOkMove(currentBoard);
             else if(CalculateBestMove) botmove = Search.CalulateBestMove(currentBoard);
             else if(findRecursiveMove)botmove = Searcher.findRecursiveMove(currentBoard);
+            else if(findFilthyMove) botmove = Searcher.findFilthyMove(currentBoard, 5);
             else botmove = Searcher.findRandomMove(currentBoard);
 
             currentBoard = currentBoard.move(botmove);
@@ -92,7 +95,7 @@ public class Game {
     }
 
     public static void chooseBot(){
-        Object result = JOptionPane.showInputDialog(gui, "Select bot:\n1: FindOkMove\n 2: CalculateBestMove\n 3: FindRecursiveMove");
+        Object result = JOptionPane.showInputDialog(gui, "Select bot:\n1: FindOkMove\n 2: CalculateBestMove\n 3: FindRecursiveMove\n 4: findFilthyMove");
         botvalg = result.toString().charAt(0);
         if(botvalg == '1') {
             findOkMove = true;
@@ -106,8 +109,12 @@ public class Game {
             findRecursiveMove = true;
             System.out.println("Bot selected: findRecursiveMove");
         }
+        else if(botvalg == '4'){
+            findFilthyMove = true;
+            System.out.println("Bot selected: findFilthyMove");
+        }
         else{
-            System.out.println("No bot selected. Will perform random moves.");
+            System.out.println("No bot selected. Will perform random moves instead.");
         }
     }
 

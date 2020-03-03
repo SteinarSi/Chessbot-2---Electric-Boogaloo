@@ -131,7 +131,7 @@ public class Position implements Comparable<Position> {
             brettliste[i] = brettliste[brettliste.length -i -1];
             brettliste[brettliste.length -i -1] = (char) temp;
         }
-        return new Position(reverseCase(brettliste), score, WC, BC, ep, kp);
+        return new Position(reverseCase(brettliste), -score, WC, BC, ep, kp);
     }
     public static String reverseCase(char[] chars) {
         /* Går igjennom hele listen med bokstaver, og inverterer casen til alle bokstavene.
@@ -159,8 +159,8 @@ public class Position implements Comparable<Position> {
         int newScore = score;
         char brikke = board.charAt(fra);
 
-        if(!spillerstur) newScore += value(move);
-        else newScore -= value(move);
+        /*if(!spillerstur)*/ newScore += value(move);
+        //else newScore -= value(move);
 
         //Flytter brikken
         StringBuilder newboard = new StringBuilder(board);
@@ -241,7 +241,7 @@ public class Position implements Comparable<Position> {
         char dreptbrikke = board.charAt(til);
 
         int deltascore = 0;
-        if (brikke == '.') System.out.println("Hva faen, brikken er et et punktum?");
+        if (brikke == '.') System.err.println("Hva faen, brikken er et punktum?");
         else deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
 
         if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til] + pieceValue.get(Character.toUpperCase(dreptbrikke));
@@ -256,7 +256,7 @@ public class Position implements Comparable<Position> {
 
     public int compareTo(Position pos) {
         Integer thisscore = this.score;
-        Integer otherscore = this.score;
+        Integer otherscore = pos.score;
         return thisscore.compareTo(otherscore);
     }
 }

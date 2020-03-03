@@ -2,6 +2,7 @@ package Chessbot2;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Searcher {
@@ -20,8 +21,8 @@ public class Searcher {
         for(Move move : possiblemoves){
             move.addWeight(currentBoard.value(move));
         }
-        Collections.sort(possiblemoves, Collections.reverseOrder());
-        possiblemoves.subList(0, possiblemoves.size()/2);
+        //Collections.sort(possiblemoves, Collections.reverseOrder());
+        //possiblemoves.subList(0, possiblemoves.size()/2);
         for(int i=0; i<possiblemoves.size(); i++){
             Move move = possiblemoves.get(i);
             System.out.println("Topptrekk: " + move);
@@ -44,7 +45,7 @@ public class Searcher {
                 for(Move response : responses) response.addWeight(currentBoard.value(response));
 
                 Collections.sort(responses, Collections.reverseOrder());
-                responses.subList(0, responses.size()/2);
+                responses.subList(0, responses.size()/3+1);
                 for(int i=0; i<responses.size(); i++){
                     Move response = responses.get(i);
                     response.addWeight(RecursiveValue(currentBoard, response, depth-1, false));
@@ -59,15 +60,16 @@ public class Searcher {
                 for (Move response : responses) response.addWeight(currentBoard.value(response));
 
                 Collections.sort(responses, Collections.reverseOrder());
-                responses.subList(0, responses.size()/2);
+                responses.subList(0, responses.size()/3+1);
                 for (int i=0; i<responses.size(); i++) {
                     Move response = responses.get(i);
-                    response.addWeight(RecursiveValue(currentBoard, response, depth - 1, true));
+                    response.addWeight(RecursiveValue(currentBoard, response, depth-1, true));
                 }
                 Collections.sort(responses, Collections.reverseOrder());
                 return ret - responses.get(0).getWeight();
             }
         }
+        //else System.out.println(currentBoard.board + " " + currentBoard.score);
         else return 0;
     }
 
@@ -139,5 +141,45 @@ public class Searcher {
         System.out.println(print);
 
         return bestmove;
+    }
+
+    public static int filthyHelper(Position currentBoard, int dist){
+        if (dist <= 0)
+            return currentBoard.score;
+
+        List<Position> futures = new ArrayList();
+        for (Move m : currentBoard.gen_moves()) {
+            futures.add(currentBoard.move(m).rotate());
+        }
+
+        Collections.sort(futures);
+
+        int ret = -9999999;
+        for(int i = 0; i < futures.size() && i < 5; i++) {
+            int nVal = filthyHelper(futures.get(i), dist - 1);
+            if (nVal > ret) ret = nVal;
+        }
+
+        return ret;
+    }
+
+    static Move findFilthyMove(Position current, int dist) {
+        Move ret = new Move(0, 0);
+        int score = -9999999;
+        for (Move move : current.gen_moves()) {
+            Position pos = current.move(move).rotate();
+            int score2 = -9999999;
+            for (Move m : pos.gen_moves()) {
+                int n = filthyHelper(pos.move(m).rotate(), dist - 2);
+                if (n > score2)
+                    score2 = n;
+            }
+            if (score < score2) {
+                score = score2;
+                ret = move;
+            }
+        }
+
+        return ret;
     }
 }
