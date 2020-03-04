@@ -21,15 +21,15 @@ public class Position implements Comparable<Position> {
     Tuple WC;
     Tuple BC;
     int ep;
-    boolean kp;
+    boolean black;
 
-    public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean kp) {
+    public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean black) {
         this.board = board;
         this.score = score;
         this.WC = WC;
         this.BC = BC;
         this.ep = ep;
-        this.kp = kp;
+        this.black = black;
     }
 
     public boolean check_player_move(Move move){
@@ -79,7 +79,7 @@ public class Position implements Comparable<Position> {
                 continue;
             }
             //Sjekker om rokering er lovlig, legger det til i listen
-            if(black) {
+            if(this.black) {
                 if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
                     lovligliste.add(new Move(95, 93));
                 }
@@ -131,7 +131,7 @@ public class Position implements Comparable<Position> {
             brettliste[i] = brettliste[brettliste.length -i -1];
             brettliste[brettliste.length -i -1] = (char) temp;
         }
-        return new Position(reverseCase(brettliste), -score, WC, BC, ep, kp);
+        return new Position(reverseCase(brettliste), -score, WC, BC, ep, black);
     }
     public static String reverseCase(char[] chars) {
         /* Går igjennom hele listen med bokstaver, og inverterer casen til alle bokstavene.
@@ -168,7 +168,7 @@ public class Position implements Comparable<Position> {
         newboard.setCharAt(fra, '.');
 
         //Oppdaterer rokadebetingelser
-        if (black){
+        if (this.black){
             if(fra == 21) BC.setX(false);
             if(fra == 28) BC.setY(false);
         } else{
@@ -177,7 +177,7 @@ public class Position implements Comparable<Position> {
         }
         //Rokerer
         if (brikke == 'K'){
-            if(Chess.black) BC = new Tuple(false, false);
+            if(this.black) BC = new Tuple(false, false);
             else WC = new Tuple(false, false);
 
             if(til == 97){ //Flytter tårnet om du rokerer kort.
@@ -225,7 +225,7 @@ public class Position implements Comparable<Position> {
             TeP -= 1;
             if(TeP == 0) ep = 0; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
-        return new Position(newboard.toString(), newScore, WC, BC, ep, kp); //Returnerer et nytt brett, der trekket er gjort
+        return new Position(newboard.toString(), newScore, WC, BC, ep, !black); //Returnerer et nytt brett, der trekket er gjort
     }
 
     public int value(Move move) {
@@ -250,9 +250,11 @@ public class Position implements Comparable<Position> {
         if (brikke == 'P' && til == ep) deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
         return deltascore;
     }
-    public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.kp); }
+    public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.black); }
 
     public String getBoard(){ return this.board; }
+
+    public boolean isBlack() { return this.black; }
 
     public int compareTo(Position pos) {
         Integer thisscore = this.score;

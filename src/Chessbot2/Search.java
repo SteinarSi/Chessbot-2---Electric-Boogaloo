@@ -1,3 +1,4 @@
+
 package Chessbot2;
 
 import java.util.*;
@@ -5,6 +6,7 @@ import java.util.*;
 /**
  * Search
  */
+
 public class Search
 {
     static int plies = 3;
@@ -24,7 +26,7 @@ public class Search
         {
             try 
             {
-                moves.get(i).weight = AlphaBeta(moves.get(i), plies, alpha, beta, true, board);
+                moves.get(i).addWeight(AlphaBeta(moves.get(i), plies, alpha, beta, true, board));
             } 
             catch (Exception e) 
             {
@@ -37,7 +39,7 @@ public class Search
         Arrays.sort(moveArr);//sort all the scores
         for (Move move: moveArr)
         {
-            System.out.println(move.weight);
+            System.out.println(move.getWeight());
         }
         return moveArr[moveArr.length - 1];//return the best move
     }
@@ -46,7 +48,7 @@ public class Search
         int value;
         Position currPos = board;
         Position tempPos;
-        if ((n == 0) || node.stabilityIndex)
+        if ((n == 0) || node.getStabIndex())
             //return the node weight if the node is stable or has reached sufficent depth
             return currPos.value(node);
         if (isMaximizingPlayer) {

@@ -2,10 +2,10 @@ package Chessbot2;
 
 public class Move implements Comparable
 {
-    int x;
-    int y;
-    boolean stabilityIndex;
-    int weight;
+    private int x;
+    private int y;
+    private boolean stabilityIndex;
+    private int weight;
 
     public Move(int x, int y)
     {
@@ -24,10 +24,12 @@ public class Move implements Comparable
     public int getX() { return this.x; }
     public int getY() { return this.y; }
     public int getWeight() {return this.weight; }
+    public boolean getStabIndex() { return this.stabilityIndex; }
 
     public void setX(int x) { this.x = x; }
     public void setY(int y) { this.y = y; }
     public void addWeight(int n) {this.weight += n; }
+    public void setStabIndex(boolean set) { this.stabilityIndex = set; }
 
     public String toString() {return "(" + this.x + ", " + this.y + ")"; }
 

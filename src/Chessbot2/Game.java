@@ -22,7 +22,7 @@ public class Game {
 
     public Game(){
         madeMoves = new ArrayList<>();
-        currentBoard = new Position(board, 0, WC, BC, 0, true);
+        currentBoard = new Position(board, 0, WC, BC, 0, false);
         madeMoves.add(currentBoard);
     }
 
@@ -47,7 +47,6 @@ public class Game {
                 currentBoard = currentBoard.move(com);
                 paintPieces();
                 madeMoves.add(currentBoard);
-                black = true;
                 spillerstur = false;
                 botMove();
 
@@ -82,7 +81,6 @@ public class Game {
             currentBoard = currentBoard.rotate();
             madeMoves.add(currentBoard);
             paintPieces();
-            black = false;
             spillerstur = true;
 
         }catch(Exception e){
@@ -95,6 +93,11 @@ public class Game {
     }
 
     public static void chooseBot(){
+        findRecursiveMove = false;
+        findOkMove = false;
+        CalculateBestMove = false;
+        findFilthyMove = false;
+
         Object result = JOptionPane.showInputDialog(gui, "Select bot:\n1: FindOkMove\n 2: CalculateBestMove\n 3: FindRecursiveMove\n 4: findFilthyMove");
         botvalg = result.toString().charAt(0);
         if(botvalg == '1') {

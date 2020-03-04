@@ -45,7 +45,7 @@ public class Chess/* implements ActionListener*/ {
     public static HashMap<Character, String> charToString = Generator.charToString();
     public static HashMap<Character, Integer> pieceValue = Generator.makePieceValue();
 
-    static boolean black = false;
+    //static boolean black = false;
     static boolean play = true;
     static boolean gjorttrekk = false;
     static boolean spillerstur = true;
