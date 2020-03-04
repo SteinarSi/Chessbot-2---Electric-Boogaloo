@@ -61,18 +61,28 @@ public class Action extends KeyAdapter implements ActionListener {
                 //Alt dette er kun for at spilleren skal kunne trykke på brikkene på skjermen for å flytte.
                 //Jeg vet dette er jævlig stygg kode, men det funker. Ikke døm meg.
                 if(Event.getSource() == buttonlist.get(i).getY()) {
-                    userpressed += buttonlist.get(i).getX();
-                    if(userpressed.length() >= 5){
+                    int indeks = buttonlist.get(i).getX();
+                    char brikke = getCurrentBoard().board.charAt(indeks);
+
+                    if (Character.isUpperCase(brikke)){
+                        userpressed = "" + indeks;
+                    }
+                    else if(userpressed.length()>=2 && !Character.isUpperCase(brikke)) {
+                        userpressed += indeks;
+                    }
+                    if(userpressed.length() >= 4){
                         String a = "" + userpressed.charAt(0);
                         a+= userpressed.charAt(1);
-                        String b = "" + userpressed.charAt(3);
-                        b += userpressed.charAt(4);
+                        String b = "" + userpressed.charAt(2);
+                        b += userpressed.charAt(3);
                         Move move = new Move(Integer.parseInt(a), Integer.parseInt(b));
-                        userpressed = "";
                         if(getCurrentBoard().check_player_move(move)){
                             game.playerMove(move);
-                        } else System.err.println("Not a legal move!");
-                    } else userpressed += " ";
+                        } else {
+                            System.err.println("Not a legal move!");
+                            userpressed = a;
+                        }
+                    }
                 }
             }
         }
