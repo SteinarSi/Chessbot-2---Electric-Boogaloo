@@ -32,7 +32,7 @@ public class Game {
 
     public static String getBoard() { return currentBoard.getBoard(); }
 
-    public void playerMove(String command) {
+    public void playerMove(Move move) {
         /* Forsøker å gjøre spillerens trekk.
         Tar hvilken som helst streng som input,
         og forsøker å oversette det til en tuppel før den sender det til Position og gjør trekket.
@@ -40,18 +40,11 @@ public class Game {
         f. eks " \n  e2    e4sd jknsd bjsd\n" Blir oversatt til Tuple(85, 65), og returnerer true.
         f. eks "ijnsdfhjb e2e4 sdkjn sdfjl sd jsd  sdjnsd " er uforståelig og returnerer false uten å bli gjort.
          */
-        if(IsAMove(command)) {
-            Move com = parse(command);
-            if (currentBoard.check_player_move(com)) {
-                //Gjør trekk for spilleren
-                currentBoard = currentBoard.move(com);
-                paintPieces();
-                madeMoves.add(currentBoard);
-                spillerstur = false;
-                botMove();
-
-            } else System.err.println("Not a legal move!");
-        } else System.err.println("Try typing a move on the format 'letter number letter number'");
+            currentBoard = currentBoard.move(move);
+            paintPieces();
+            madeMoves.add(currentBoard);
+            spillerstur = false;
+            botMove();
     }
 
     public void back() {
@@ -119,6 +112,42 @@ public class Game {
         else{
             System.out.println("No bot selected. Will perform random moves instead.");
         }
+    }
+    public static Move parse(String c){
+        /*Den andre funksjonen for å sjekke lovligheten til spillerens trekk.
+        Denne oversetter spillerens streng til et trekk som Position og Game kan forstå.
+        IsAMove -> parse -> check_player_move
+
+        f. eks. "e2 e4" blir Tuple(85, 65).
+        Planen er at kun Chess skal få se syntakser som e2e4,
+        og at den skal konvertere alt slikt til Tupler og tall før den sender det til Position, Game, og Searcher.
+         */
+        c = c.replaceAll(" ", "");
+        int filfra = (int) c.charAt(0) - 'a';
+        int rankfra = c.charAt(1) - '1';
+        int x = A1 + filfra - 10*rankfra; //Koordinat fra
+
+        int filtil = (int) c.charAt(2) - 'a';
+        int ranktil = c.charAt(3) - '1';
+        int y = A1 + filtil - 10*ranktil; //Koordinat til
+
+        return new Move(x, y);
+    }
+    public static boolean IsAMove(String input){
+        /* Den første funksjonen for å sjekke lovligheten til spillerens trekk.
+        Denne sjekker om spilleren skrev noe som kan tolkes som et trekk eller ikke.
+        IsAMove -> parse -> check_player_move
+
+        "e2 e4 asdsg w3" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
+          */
+        input = input.replaceAll(" ", "");
+        if (input.length() >= 4) {
+            Character første = input.charAt(0);
+            Character andre = input.charAt(1);
+            Character tredje = input.charAt(2);
+            Character fjerde = input.charAt(3);
+            return(bokstaver.contains(første) && tall.contains(andre) && bokstaver.contains(tredje) && tall.contains(fjerde));
+        } else return false;
     }
 
     public void newGame(){

@@ -45,9 +45,6 @@ public class Chess/* implements ActionListener*/ {
     public static HashMap<Character, String> charToString = Generator.charToString();
     public static HashMap<Character, Integer> pieceValue = Generator.makePieceValue();
 
-    //static boolean black = false;
-    static boolean play = true;
-    static boolean gjorttrekk = false;
     static boolean spillerstur = true;
     static int TeP = 0; //Passanttelleren
     static Character nybrikke;
@@ -56,12 +53,14 @@ public class Chess/* implements ActionListener*/ {
 
     public static Game game;
     public static String usertext;
+    public static String userpressed = "";
     public static boolean trykket;
     public static JTextField textField;
     public static final JPanel gui = new JPanel(new BorderLayout(3, 3));
     public static JButton[][] chessBoardSquares = new JButton[8][8];
     public static JPanel chessBoard;
     private static final String COLS = "ABCDEFGH";
+    public static ArrayList<Tuple<Integer, JButton>> buttonlist = new ArrayList<>();
 
     public static JButton enter = new JButton("Enter");
     public static JButton back = new JButton("Go Back");
@@ -88,8 +87,6 @@ public class Chess/* implements ActionListener*/ {
 
         };
         SwingUtilities.invokeLater(r);
-
-
     }
     public static Tuple<Integer, Integer> indexToList(int index){
         index -= 20;
@@ -97,7 +94,12 @@ public class Chess/* implements ActionListener*/ {
         Integer x = index%10;
         return new Tuple(x, y);
     }
-
+    public static int listToIndex(int ii, int jj){
+        int ret = 20;
+        ret += jj*10;
+        ret += ii;
+        return ret;
+    }
     public static void paintPieces(){
         /* En funksjon for å oppdatere alt det visuelle på brettet. Denne må kalles hver gang noen har flyttet en brikke.
         Husk at denne tar utgangspunkt i at Hvit har brikker med store bokstaver, og Svart har små.
@@ -118,7 +120,6 @@ public class Chess/* implements ActionListener*/ {
             chessBoardSquares[X-1][Y].setIcon(icon);
         }
     }
-
     public final void initializeGui() {
         // set up the main GUI
         gui.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -152,8 +153,10 @@ public class Chess/* implements ActionListener*/ {
                 b.setMargin(buttonMargin);
                 ImageIcon icon = new ImageIcon(new BufferedImage(84, 84, BufferedImage.TYPE_INT_ARGB));
                 b.setIcon(icon);
-                if ((jj % 2 == 1 && ii % 2 == 1) || (jj % 2 == 0 && ii % 2 == 0)) b.setBackground(Color.gray);
-                else b.setBackground(Color.lightGray);
+                if ((jj % 2 == 1 && ii % 2 == 1) || (jj % 2 == 0 && ii % 2 == 0)) b.setBackground(Color.LIGHT_GRAY);
+                else b.setBackground(Color.gray);
+                b.addActionListener(new Action());
+                buttonlist.add(new Tuple(listToIndex(jj+1, ii), b));
                 chessBoardSquares[jj][ii] = b;
             }
         }
@@ -176,41 +179,4 @@ public class Chess/* implements ActionListener*/ {
         }
     }
     public final JComponent getGui() { return gui; }
-
-    public static Move parse(String c){
-        /*Den andre funksjonen for å sjekke lovligheten til spillerens trekk.
-        Denne oversetter spillerens streng til et trekk som Position og Game kan forstå.
-        IsAMove -> parse -> check_player_move
-
-        f. eks. "e2 e4" blir Tuple(85, 65).
-        Planen er at kun Chess skal få se syntakser som e2e4,
-        og at den skal konvertere alt slikt til Tupler og tall før den sender det til Position, Game, og Searcher.
-         */
-        c = c.replaceAll(" ", "");
-        int filfra = (int) c.charAt(0) - 'a';
-        int rankfra = c.charAt(1) - '1';
-        int x = A1 + filfra - 10*rankfra; //Koordinat fra
-
-        int filtil = (int) c.charAt(2) - 'a';
-        int ranktil = c.charAt(3) - '1';
-        int y = A1 + filtil - 10*ranktil; //Koordinat til
-
-        return new Move(x, y);
-    }
-    public static boolean IsAMove(String input){
-        /* Den første funksjonen for å sjekke lovligheten til spillerens trekk.
-        Denne sjekker om spilleren skrev noe som kan tolkes som et trekk eller ikke.
-        IsAMove -> parse -> check_player_move
-
-        "e2 e4 asdsg w3" returnerer true, "sdlfnsjgbskjøfbnskjfba" returner false.
-          */
-        input = input.replaceAll(" ", "");
-        if (input.length() >= 4) {
-            Character første = input.charAt(0);
-            Character andre = input.charAt(1);
-            Character tredje = input.charAt(2);
-            Character fjerde = input.charAt(3);
-            return(bokstaver.contains(første) && tall.contains(andre) && bokstaver.contains(tredje) && tall.contains(fjerde));
-        } else return false;
-    }
 }
