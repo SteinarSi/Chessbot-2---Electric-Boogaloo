@@ -145,7 +145,7 @@ public class Searcher {
 
     public static int filthyHelper(Position currentBoard, int dist){
         if (dist <= 0)
-            return currentBoard.score;
+            return currentBoard.getScore();
 
         List<Position> futures = new ArrayList();
         for (Move m : currentBoard.gen_moves()) {

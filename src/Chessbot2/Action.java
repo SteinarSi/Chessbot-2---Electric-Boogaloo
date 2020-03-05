@@ -27,7 +27,7 @@ public class Action extends KeyAdapter implements ActionListener {
                     if (usertext.equals("quit")) System.exit(0);
                     else if (usertext.equals("back")) game.back();
                     else if (usertext.equals("new")) game.newGame();
-                    else if (usertext.equals("print")) System.out.println(Game.getCurrentBoard().board);
+                    else if (usertext.equals("print")) System.out.println(Game.getCurrentBoard().getBoard());
                     else {
                         if(IsAMove(usertext)){
                             Move move = parse(usertext);
@@ -62,7 +62,7 @@ public class Action extends KeyAdapter implements ActionListener {
                 //Jeg vet dette er jævlig stygg kode, men det funker. Ikke døm meg.
                 if(Event.getSource() == buttonlist.get(i).getY()) {
                     int indeks = buttonlist.get(i).getX();
-                    char brikke = getCurrentBoard().board.charAt(indeks);
+                    char brikke = getCurrentBoard().getBoard().charAt(indeks);
 
                     //Gjør at brikken du trykket på, om den er riktig farge, blir "selektert".
                     if (Character.isUpperCase(brikke)){

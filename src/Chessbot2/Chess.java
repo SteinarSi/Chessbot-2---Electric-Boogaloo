@@ -48,14 +48,11 @@ public class Chess/* implements ActionListener*/ {
     static boolean spillerstur = true;
     static int TeP = 0; //Passanttelleren
     static Character nybrikke;
-    static boolean promotert = false;
     public static char botvalg = '1';
 
     public static Game game;
     public static String usertext;
-    public static String userpressed = "";
     public static Tuple<Integer, Integer> pressedtuple = new Tuple(null, null);
-    public static boolean trykket;
     public static JTextField textField;
     public static final JPanel gui = new JPanel(new BorderLayout(3, 3));
     public static JButton[][] chessBoardSquares = new JButton[8][8];

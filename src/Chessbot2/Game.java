@@ -26,10 +26,6 @@ public class Game {
         madeMoves.add(currentBoard);
     }
 
-    public String getPosition() {
-        return madeMoves.get(madeMoves.size()-1).board;
-    }
-
     public static String getBoard() { return currentBoard.getBoard(); }
 
     public void playerMove(Move move) {

@@ -16,13 +16,13 @@ public class Position implements Comparable<Position> {
     I tillegg har den funksjoner for å flytte brikker(og dermed opprette ett nytt brett med de nye posisjonene),
     generere lister over alle lovlige trekk, og å rotere brettet helt rundt.
      */
-    String board;
-    int score;
-    Tuple WC;
-    Tuple BC;
-    int ep;
-    boolean black;
-    boolean botmove;
+    private String board;
+    private int score;
+    private Tuple WC;
+    private Tuple BC;
+    private int ep;
+    private boolean black;
+    private boolean botmove;
 
     public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean black, Boolean botmove) {
         this.board = board;
@@ -259,6 +259,8 @@ public class Position implements Comparable<Position> {
     public boolean isBlack() { return this.black; } //Om det er svart sin tur akkurat nå eller ikke.
 
     public boolean isBotMove() { return this.botmove; }  //Om det er botten sin tur akkurat nå eller ikke.
+
+    public int getScore() { return this.score; }
 
     public int compareTo(Position pos) {
         Integer thisscore = this.score;
