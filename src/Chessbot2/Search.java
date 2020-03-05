@@ -9,24 +9,22 @@ import java.util.*;
 
 public class Search
 {
-    static int plies = 3;
+    static int plies = 4;
     static int alpha = -999999999;
     static int beta = 999999999;
     List<Position> moves = new ArrayList<>();//Already known moves
 
     public static Move CalulateBestMove(Position board)
     {
-        List<Move> moves = new ArrayList<>();
-        for (Move move : board.gen_moves())
-        {
-            moves.add(move);
-        }
+        List<Move> moves = board.gen_moves();
         Move[] moveArr = new Move[moves.size()];
+
         for (int i=0; i<moves.size(); i++)
         {
             try 
             {
-                moves.get(i).addWeight(AlphaBeta(moves.get(i), plies, alpha, beta, true, board));
+                moves.get(i).addWeight(AlphaBeta(moves.get(i), plies, alpha, beta, false, board));
+                System.out.println("Move: " + moves.get(i) + "Value: " + moves.get(i).getWeight());
             } 
             catch (Exception e) 
             {
@@ -37,10 +35,6 @@ public class Search
             moveArr[i] = moves.get(i);
         }
         Arrays.sort(moveArr);//sort all the scores
-        for (Move move: moveArr)
-        {
-            System.out.println(move.getWeight());
-        }
         return moveArr[moveArr.length - 1];//return the best move
     }
 
@@ -69,7 +63,7 @@ public class Search
             tempPos = currPos.move(node);//Simulate the move
             tempPos = tempPos.rotate();//Switch to other POV
             for (Move move : tempPos.gen_moves()) //Gen sub-nodes
-            {
+            {xxxxxxxxxxxxxxxxxxxxx
                 value = Math.min(value, AlphaBeta(move, n - 1, alpha, beta, true, tempPos));
                 beta = Math.min(beta, value);
                 if (alpha >= beta)
