@@ -54,6 +54,7 @@ public class Chess/* implements ActionListener*/ {
     public static Game game;
     public static String usertext;
     public static String userpressed = "";
+    public static Tuple<Integer, Integer> pressedtuple = new Tuple(null, null);
     public static boolean trykket;
     public static JTextField textField;
     public static final JPanel gui = new JPanel(new BorderLayout(3, 3));

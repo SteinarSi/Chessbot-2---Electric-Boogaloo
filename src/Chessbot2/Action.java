@@ -64,23 +64,24 @@ public class Action extends KeyAdapter implements ActionListener {
                     int indeks = buttonlist.get(i).getX();
                     char brikke = getCurrentBoard().board.charAt(indeks);
 
+                    //Gjør at brikken du trykket på, om den er riktig farge, blir "selektert".
                     if (Character.isUpperCase(brikke)){
-                        userpressed = "" + indeks;
+                        pressedtuple.setX(indeks);
                     }
-                    else if(userpressed.length()>=2 && !Character.isUpperCase(brikke)) {
-                        userpressed += indeks;
+                    //Selekterer ruten du vil flytte til, om du ikke trykket på en ny hvit brikke.
+                    else if(pressedtuple.getX() != null && !Character.isUpperCase(brikke)) {
+                        pressedtuple.setY(indeks);
                     }
-                    if(userpressed.length() >= 4){
-                        String a = "" + userpressed.charAt(0);
-                        a+= userpressed.charAt(1);
-                        String b = "" + userpressed.charAt(2);
-                        b += userpressed.charAt(3);
-                        Move move = new Move(Integer.parseInt(a), Integer.parseInt(b));
+                    //Prøver å gjøre trekket.
+                    if(pressedtuple.getY() != null){
+                        Move move = new Move(pressedtuple.getX(), pressedtuple.getY()); //Konverterer tuppelen med knappinput til et Move.
                         if(getCurrentBoard().check_player_move(move)){
                             game.playerMove(move);
+                            pressedtuple.setX(pressedtuple.getY()); //Gjør at når du flytter en brikke, er den automatisk selektert til å bli flyttet i neste trekk.
+                            pressedtuple.setY(null);
                         } else {
                             System.err.println("Not a legal move!");
-                            userpressed = a;
+                            pressedtuple.setY(null);
                         }
                     }
                 }
