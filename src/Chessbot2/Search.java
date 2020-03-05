@@ -42,7 +42,7 @@ public class Search
         int value;
         Position currPos = board;
         Position tempPos;
-        if ((n == 0) || node.getStabIndex())
+        if ((n == 0) || false)
             //return the node weight if the node is stable or has reached sufficent depth
             return currPos.value(node);
         if (isMaximizingPlayer) {
@@ -76,7 +76,7 @@ public class Search
 
     public static boolean CalculateStabilityIndex(Move move, Position board)
     {
-        int stabilityCriteria = 250;
+        int stabilityCriteria = 50;
         Position currPos = board;
         Position tempPos = currPos.move(move);
         tempPos = tempPos.rotate();
