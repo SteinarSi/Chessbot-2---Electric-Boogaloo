@@ -21,20 +21,20 @@ public class Search
 
         for (int i=0; i<moves.size(); i++)
         {
-            try 
-            {
+            try {
                 moves.get(i).addWeight(AlphaBeta(moves.get(i), plies, alpha, beta, false, board));
-                System.out.println("Move: " + moves.get(i) + "Value: " + moves.get(i).getWeight());
-            } 
-            catch (Exception e) 
-            {
+                //System.out.println("Move: " + moves.get(i) + "Value: " + moves.get(i).getWeight());
+            } catch (Exception e) {
                 e.getStackTrace();
                 e.getMessage();
             }
-            
+
             moveArr[i] = moves.get(i);
         }
+        
         Arrays.sort(moveArr);//sort all the scores
+        System.out.println("Old SCore: " + board.getScore());
+        System.out.println("Current positions score: " + board.move(moveArr[moveArr.length - 1]).getScore() + ", Predicted score in " + plies +" turn: " + moveArr[moveArr.length - 1].getWeight());
         return moveArr[moveArr.length - 1];//return the best move
     }
 
@@ -44,7 +44,7 @@ public class Search
         Position tempPos;
         if ((n == 0) || false)
             //return the node weight if the node is stable or has reached sufficent depth
-            return currPos.value(node);
+            return currPos.move(node).getScore();
         if (isMaximizingPlayer) {
             value = -999999999;
             tempPos = currPos.move(node);//Simulate the move
