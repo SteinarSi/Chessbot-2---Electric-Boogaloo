@@ -33,8 +33,8 @@ public class Chess/* implements ActionListener*/ {
     final static int H8 = 28;
 
     //Hvem som kan rokere, og hvor
-    static Tuple WC = new Tuple(true, true);
-    static Tuple BC = new Tuple(true, true);
+    static final Tuple initWC = new Tuple(true, true);
+    static final Tuple initBC = new Tuple(true, true);
 
     //Genererer dicter for brettverdier og himmelretningene til hver enkelt brikke
     public static Dictionary<Character, Integer[]> pst = Generator.makePst();
@@ -48,7 +48,7 @@ public class Chess/* implements ActionListener*/ {
     static boolean spillerstur = true;
     static int TeP = 0; //Passanttelleren
     static Character nybrikke;
-    public static char botvalg = '1';
+    public static char botvalg = '0';
 
     public static Game game;
     public static String usertext;

@@ -23,7 +23,7 @@ public class Game {
 
     public Game(){
         madeMoves = new ArrayList<>();
-        currentBoard = new Position(initialboard, 0, WC, BC, 0, false, false);
+        currentBoard = new Position(initialboard, 0, initWC, initBC, 0, false, false);
         madeMoves.add(currentBoard);
     }
 
@@ -149,7 +149,7 @@ public class Game {
 
     public void newGame(){
         madeMoves.clear();
-        currentBoard = new Position(initialboard, 0, new Tuple(true, true), new Tuple(true, true), 0, true, false);
+        currentBoard = new Position(initialboard, 0, initWC, initBC, 0, true, false);
         madeMoves.add(currentBoard);
         paintPieces();
         chooseBot();

@@ -25,12 +25,12 @@ public class Searcher {
         //possiblemoves.subList(0, possiblemoves.size()/2);
         for(int i=0; i<possiblemoves.size(); i++){
             Move move = possiblemoves.get(i);
-            System.out.println("Topptrekk: " + move);
+            //System.out.println("Topptrekk: " + move);
             move.addWeight(RecursiveValue(currentBoard, move, depth, false));
-            System.out.println("verdi: " + move.getWeight());
+            //System.out.println("verdi: " + move.getWeight());
         }
         Collections.sort(possiblemoves, Collections.reverseOrder());
-        System.out.println("Beste trekk: " + possiblemoves.get(0) + " med en vekt på " + possiblemoves.get(0).getWeight());
+        //System.out.println("Beste trekk: " + possiblemoves.get(0) + " med en vekt på " + possiblemoves.get(0).getWeight());
         return possiblemoves.get(0);
     }
     public static int RecursiveValue(Position currentBoard, Move move, int depth, boolean Max){

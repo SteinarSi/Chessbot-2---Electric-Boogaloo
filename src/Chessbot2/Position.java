@@ -18,13 +18,13 @@ public class Position implements Comparable<Position> {
      */
     private String board;
     private int score;
-    private Tuple WC; // TODO: 05.03.2020 Gjør at du fortsatt kan rokere, om du flyttet kongen, og trykket back.
-    private Tuple BC;
+    Tuple<Boolean, Boolean> WC; // TODO: 05.03.2020 Gjør at du fortsatt kan rokere, om du flyttet kongen, og trykket back.
+    Tuple<Boolean, Boolean> BC;
     private int ep;
     private boolean black;
     private boolean botmove;
 
-    public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean black, Boolean botmove) {
+    public Position(String board, int score, Tuple<Boolean, Boolean> WC, Tuple BC, int ep, Boolean black, Boolean botmove) {
         this.board = board;
         this.score = score;
         this.WC = WC;
@@ -82,19 +82,18 @@ public class Position implements Comparable<Position> {
             }
             //Sjekker om rokering er lovlig, legger det til i listen
             if(this.black) {
-                if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
+                if ((brikke == 'K' && this.BC.getX() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.')) {
                     lovligliste.add(new Move(94, 92));
                 }
-                if ((brikke == 'K' && (boolean) BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
+                if ((brikke == 'K' && this.BC.getY() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.' && board.charAt(fra +E + E + E) == '.')) {
                     lovligliste.add(new Move(94, 96));
                 }
             } else {
-                if ((brikke == 'K' && (boolean) WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
+                if ((brikke == 'K' && this.WC.getX() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
                     lovligliste.add(new Move(95, 93));
                 }
-                if ((brikke == 'K' && (boolean) WC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
+                if ((brikke == 'K' && this.WC.getY() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
                     lovligliste.add(new Move(95, 97));
-
                 }
             }
             //Legger til alle normale trekk
@@ -156,6 +155,8 @@ public class Position implements Comparable<Position> {
         Returnerer ett nytt brett, der trekket er blitt gjort.
         Den oppdaterer også betingelser for rokade, osv.
          */
+        Tuple<Boolean, Boolean> retWC = new Tuple(WC.getX(), WC.getY());
+        Tuple<Boolean, Boolean> retBC = new Tuple(BC.getX(), BC.getY());
         int fra = move.getX();
         int til = move.getY();
         int newScore = score;
@@ -171,26 +172,44 @@ public class Position implements Comparable<Position> {
 
         //Oppdaterer rokadebetingelser
         if (this.black){
-            if(fra == 21) BC.setX(false);
-            if(fra == 28) BC.setY(false);
+            if(fra == 98) retBC.setX(false);
+            if(fra == 91) retBC.setY(false);
         } else{
-            if(fra == 91) WC.setX(false);
-            if(fra == 98) WC.setY(false);
+            if(fra == 91) retWC.setX(false);
+            if(fra == 98) retWC.setY(false);
         }
         //Rokerer
         if (brikke == 'K'){
-            if(this.black) BC = new Tuple(false, false);
-            else WC = new Tuple(false, false);
+            if(black) retBC = new Tuple(false, false);
+            else retWC = new Tuple(false, false);
 
-            if(til == 97){ //Flytter tårnet om du rokerer kort.
-                newboard.setCharAt(98, '.');
-                newboard.setCharAt(96, 'R');
-                newScore += value(new Move(98, 96));
+            if(black){
+                if(til == 92){ //Flytter tårnet om du rokerer kort.
+                    newScore += value(new Move(91, 93));
+                    newboard.setCharAt(91, '.');
+                    newboard.setCharAt(93, 'R');
+                    newScore += 20;
+                }
+                if(til == 96) { //Flytter tårnet om du rokerer langt.
+                    newScore += value(new Move(98, 95));
+                    newboard.setCharAt(98, '.');
+                    newboard.setCharAt(95, 'R');
+                    newScore += 20;
+                }
             }
-            if(til == 92){ //Flytter tårnet om du rokerer langt.
-                newboard.setCharAt(91, '.');
-                newboard.setCharAt(93, 'R');
-                newScore += value(new Move(91, 93));
+            else{
+                if(til == 93){ //Flytter tårnet om du rokerer langt.
+                    newScore += value(new Move(91, 94));
+                    newboard.setCharAt(91, '.');
+                    newboard.setCharAt(94, 'R');
+                    newScore += 20;
+                }
+                if(til == 97) { //Flytter tårnet om du rokerer kort
+                    newScore += value(new Move(98, 96));
+                    newboard.setCharAt(98, '.');
+                    newboard.setCharAt(96, 'R');
+                    newScore += 20;
+                }
             }
         }
         if(brikke == 'P') {
@@ -227,7 +246,7 @@ public class Position implements Comparable<Position> {
             TeP -= 1;
             if(TeP == 0) ep = 0; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
-        return new Position(newboard.toString(), newScore, WC, BC, ep, !black, !botmove); //Returnerer et nytt brett, der trekket er gjort
+        return new Position(newboard.toString(), newScore, retWC, retBC, ep, !black, !botmove); //Returnerer et nytt brett, der trekket er gjort
     }
 
     public int value(Move move) {
@@ -243,6 +262,7 @@ public class Position implements Comparable<Position> {
         char dreptbrikke = board.charAt(til);
 
         int deltascore = 0;
+
         if (brikke == '.') { // TODO: 05.03.2020 Jeg tror jeg har fikset denne buggen, men venter med å fjerne dette i tilfelle. 
             System.err.println("Hva faen, brikken er et punktum?");
             System.out.println(board);
@@ -256,7 +276,7 @@ public class Position implements Comparable<Position> {
         if (brikke == 'P' && til == ep) deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
         return deltascore;
     }
-    public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.black, this.botmove); }
+    public Position copy(){ return new Position(this.board, this.score, this.WC.copy(), this.BC.copy(), this.ep, this.black, this.botmove); }
 
     public String getBoard(){ return this.board; }
 

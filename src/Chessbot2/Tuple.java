@@ -16,6 +16,8 @@ class Tuple<X, Y> {
     public void setX(Object x) { this.x = (X) x; }
     public void setY(Object y) { this.y = (Y) y; }
 
+    public Tuple<X, Y> copy() { return new Tuple(getX(), getY()); }
+
     public String toString(){
         return "(" + this.x + ", " + this.y + ")";
     }
