@@ -1,6 +1,6 @@
 package Chessbot2;
 
-class Tuple<X, Y> {
+public class Tuple<X, Y> {
     /*
     Definerer Tupler, som fra nå av er mutable. "Reality can be whatever I want" - Thanos
      */

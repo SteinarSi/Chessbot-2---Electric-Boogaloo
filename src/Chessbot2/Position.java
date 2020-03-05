@@ -18,13 +18,13 @@ public class Position implements Comparable<Position> {
      */
     private String board;
     private int score;
-    Tuple<Boolean, Boolean> WC; // TODO: 05.03.2020 Gjør at du fortsatt kan rokere, om du flyttet kongen, og trykket back.
+    Tuple<Boolean, Boolean> WC;
     Tuple<Boolean, Boolean> BC;
     private int ep;
     private boolean black;
     private boolean botmove;
 
-    public Position(String board, int score, Tuple<Boolean, Boolean> WC, Tuple BC, int ep, Boolean black, Boolean botmove) {
+    public Position(String board, int score, Tuple<Boolean, Boolean> WC, Tuple<Boolean, Boolean> BC, int ep, Boolean black, Boolean botmove) {
         this.board = board;
         this.score = score;
         this.WC = WC;
@@ -45,9 +45,7 @@ public class Position implements Comparable<Position> {
         boolean ret = false;
         ArrayList<Move> genmoves = gen_moves(); //Opretter en liste over nesten-lovlige trekk.
         for(Move genmove : genmoves) {
-            if (genmove.equals(move)) {
-                ret = true; //Om trekket er med i listen over nesten-lovligetrekk.
-            }
+            if (genmove.equals(move)) ret = true; //Om trekket er med i listen over nesten-lovligetrekk.
         }
         if(ret){
             Position copy = copy();
@@ -189,26 +187,21 @@ public class Position implements Comparable<Position> {
                     newboard.setCharAt(91, '.');
                     newboard.setCharAt(93, 'R');
                     newScore += 20;
-                }
-                if(til == 96) { //Flytter tårnet om du rokerer langt.
+                }if(til == 96) { //Flytter tårnet om du rokerer langt.
                     newScore += value(new Move(98, 95));
                     newboard.setCharAt(98, '.');
                     newboard.setCharAt(95, 'R');
                     newScore += 20;
                 }
-            }
-            else{
+            } else{
                 if(til == 93){ //Flytter tårnet om du rokerer langt.
                     newScore += value(new Move(91, 94));
                     newboard.setCharAt(91, '.');
                     newboard.setCharAt(94, 'R');
-                    newScore += 20;
-                }
-                if(til == 97) { //Flytter tårnet om du rokerer kort
+                }if(til == 97) { //Flytter tårnet om du rokerer kort
                     newScore += value(new Move(98, 96));
                     newboard.setCharAt(98, '.');
                     newboard.setCharAt(96, 'R');
-                    newScore += 20;
                 }
             }
         }
@@ -220,7 +213,7 @@ public class Position implements Comparable<Position> {
             if (til == ep) newboard.setCharAt(ep + S, '.'); //Drepper den passerte bonden i forbifarten
 
             if (til <= H8 && til >= A8) { //Om spilleren flytter bonden til øverste rad, skal han få velge hvilken brikke han vil promotere til.
-                if (spillerstur && this == game.getCurrentBoard()) { //Sikrer at det er spillerens tur, og at dette trekket blir gjort på d
+                if (!botmove && this == game.getCurrentBoard()) { //Sikrer at det er spillerens tur, og at dette trekket blir gjort på det "ekte" brettet.
                     boolean done = false;
                     do {
                         Object result = JOptionPane.showInputDialog(gui, "Enter what you want to promote to: (q/n/r/b) ");
@@ -263,8 +256,8 @@ public class Position implements Comparable<Position> {
 
         int deltascore = 0;
 
-        if (brikke == '.') { // TODO: 05.03.2020 Jeg tror jeg har fikset denne buggen, men venter med å fjerne dette i tilfelle. 
-            System.err.println("Hva faen, brikken er et punktum?");
+        if (brikke == '.') { // TODO: 05.03.2020 Fiks buggen som gjør at botten prøver å flytte et punktum.
+            System.err.println("Hva faen, brikken er et punktum???");
             System.out.println(board);
             System.out.println(move);
         }

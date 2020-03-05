@@ -40,9 +40,9 @@ public class Search
 
     public static int AlphaBeta(Move node, int n, int alpha, int beta, boolean isMaximizingPlayer, Position board) {
         int value;
-        Position currPos = board;
+        Position currPos = board.copy();
         Position tempPos;
-        if ((n == 0) || false)
+        if ((n == 0))
             //return the node weight if the node is stable or has reached sufficent depth
             return currPos.move(node).getScore();
         if (isMaximizingPlayer) {
@@ -77,7 +77,7 @@ public class Search
     public static boolean CalculateStabilityIndex(Move move, Position board)
     {
         int stabilityCriteria = 50;
-        Position currPos = board;
+        Position currPos = board.copy();
         Position tempPos = currPos.move(move);
         tempPos = tempPos.rotate();
         for (Move i : tempPos.gen_moves())
