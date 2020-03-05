@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 
 public class Chess/* implements ActionListener*/ {
-    public final static String board =
+    public final static String initialboard =
             "         \n"+ // 1 - 8
             "         \n"+ // 11 - 18
             " rnbqkbnr\n"+ // 21 - 28
@@ -104,7 +104,7 @@ public class Chess/* implements ActionListener*/ {
         Om du bruker rotate() en gang for mye eller en gang for lite, får alle brikkene invertert farge og posisjon.
          */
         String currentBoard = game.getBoard();
-        for(int i=20; i<board.length()-20; i++){
+        for(int i=20; i<initialboard.length()-20; i++){
             Tuple<Integer, Integer> indekser = indexToList(i);
             Integer X = indekser.getX();
             Integer Y = indekser.getY();
