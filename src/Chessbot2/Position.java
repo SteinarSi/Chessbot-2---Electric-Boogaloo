@@ -22,14 +22,16 @@ public class Position implements Comparable<Position> {
     Tuple BC;
     int ep;
     boolean black;
+    boolean botmove;
 
-    public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean black) {
+    public Position(String board, int score, Tuple WC, Tuple BC, int ep, Boolean black, Boolean botmove) {
         this.board = board;
         this.score = score;
         this.WC = WC;
         this.BC = BC;
         this.ep = ep;
         this.black = black;
+        this.botmove = botmove;
     }
 
     public boolean check_player_move(Move move){
@@ -131,7 +133,7 @@ public class Position implements Comparable<Position> {
             brettliste[i] = brettliste[brettliste.length -i -1];
             brettliste[brettliste.length -i -1] = (char) temp;
         }
-        return new Position(reverseCase(brettliste), -score, WC, BC, ep, black);
+        return new Position(reverseCase(brettliste), -score, WC, BC, ep, black, botmove);
     }
     public static String reverseCase(char[] chars) {
         /* Går igjennom hele listen med bokstaver, og inverterer casen til alle bokstavene.
@@ -159,8 +161,8 @@ public class Position implements Comparable<Position> {
         int newScore = score;
         char brikke = board.charAt(fra);
 
-        /*if(!spillerstur)*/ newScore += value(move);
-        //else newScore -= value(move);
+        if(botmove) newScore += value(move); //Legger til score når det er botten som gjorde trekket, trekker fra ellers.
+        else newScore -= value(move);
 
         //Flytter brikken
         StringBuilder newboard = new StringBuilder(board);
@@ -225,7 +227,7 @@ public class Position implements Comparable<Position> {
             TeP -= 1;
             if(TeP == 0) ep = 0; //Fjerner muligheten til å ta en passant, etter at 2 trekk er blitt gjort.
         }
-        return new Position(newboard.toString(), newScore, WC, BC, ep, !black); //Returnerer et nytt brett, der trekket er gjort
+        return new Position(newboard.toString(), newScore, WC, BC, ep, !black, !botmove); //Returnerer et nytt brett, der trekket er gjort
     }
 
     public int value(Move move) {
@@ -250,11 +252,13 @@ public class Position implements Comparable<Position> {
         if (brikke == 'P' && til == ep) deltascore += pst.get('P')[ep+S]; //Ekstra score om du tok en brikke uten å ta på den (en passant)
         return deltascore;
     }
-    public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.black); }
+    public Position copy(){ return new Position(this.board, this.score, this.WC, this.BC, this.ep, this.black, this.botmove); }
 
     public String getBoard(){ return this.board; }
 
-    public boolean isBlack() { return this.black; }
+    public boolean isBlack() { return this.black; } //Om det er svart sin tur akkurat nå eller ikke.
+
+    public boolean isBotMove() { return this.botmove; }  //Om det er botten sin tur akkurat nå eller ikke.
 
     public int compareTo(Position pos) {
         Integer thisscore = this.score;

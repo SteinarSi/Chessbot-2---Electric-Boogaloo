@@ -16,7 +16,7 @@ public class SearcherTest {
                 " RNBQKBNR\n"+ // 91 - 98
                 "         \n"+ // 101 - 108
                 "          ";  // 111 - 118
-        findOkMove(new Position(board, 0, new Tuple(true, true), new Tuple(true, true), 0, true ));
+        findOkMove(new Position(board, 0, new Tuple(true, true), new Tuple(true, true), 0, true, false ));
     }
 
 }
