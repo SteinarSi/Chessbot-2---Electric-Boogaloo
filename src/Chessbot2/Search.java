@@ -63,7 +63,7 @@ public class Search
             tempPos = currPos.move(node);//Simulate the move
             tempPos = tempPos.rotate();//Switch to other POV
             for (Move move : tempPos.gen_moves()) //Gen sub-nodes
-            {xxxxxxxxxxxxxxxxxxxxx
+            {
                 value = Math.min(value, AlphaBeta(move, n - 1, alpha, beta, true, tempPos));
                 beta = Math.min(beta, value);
                 if (alpha >= beta)
