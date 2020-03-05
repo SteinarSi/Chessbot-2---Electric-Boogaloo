@@ -18,7 +18,7 @@ public class Position implements Comparable<Position> {
      */
     private String board;
     private int score;
-    private Tuple WC;
+    private Tuple WC; // TODO: 05.03.2020 Gjør at du fortsatt kan rokere, om du flyttet kongen, og trykket back.
     private Tuple BC;
     private int ep;
     private boolean black;
@@ -83,10 +83,10 @@ public class Position implements Comparable<Position> {
             //Sjekker om rokering er lovlig, legger det til i listen
             if(this.black) {
                 if ((brikke == 'K' && (boolean) BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
-                    lovligliste.add(new Move(95, 93));
+                    lovligliste.add(new Move(94, 92));
                 }
                 if ((brikke == 'K' && (boolean) BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
-                    lovligliste.add(new Move(95, 97));
+                    lovligliste.add(new Move(94, 96));
                 }
             } else {
                 if ((brikke == 'K' && (boolean) WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
@@ -133,7 +133,7 @@ public class Position implements Comparable<Position> {
             brettliste[i] = brettliste[brettliste.length -i -1];
             brettliste[brettliste.length -i -1] = (char) temp;
         }
-        return new Position(reverseCase(brettliste), -score, WC, BC, ep, black, botmove);
+        return new Position(reverseCase(brettliste), score, WC, BC, ep, black, botmove);
     }
     public static String reverseCase(char[] chars) {
         /* Går igjennom hele listen med bokstaver, og inverterer casen til alle bokstavene.
@@ -243,7 +243,11 @@ public class Position implements Comparable<Position> {
         char dreptbrikke = board.charAt(til);
 
         int deltascore = 0;
-        if (brikke == '.') System.err.println("Hva faen, brikken er et punktum?");
+        if (brikke == '.') { // TODO: 05.03.2020 Jeg tror jeg har fikset denne buggen, men venter med å fjerne dette i tilfelle. 
+            System.err.println("Hva faen, brikken er et punktum?");
+            System.out.println(board);
+            System.out.println(move);
+        }
         else deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
 
         if(Character.isLowerCase(dreptbrikke)) deltascore += pst.get(Character.toUpperCase(dreptbrikke))[120-til] + pieceValue.get(Character.toUpperCase(dreptbrikke));
