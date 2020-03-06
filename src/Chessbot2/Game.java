@@ -3,12 +3,9 @@ package Chessbot2;
 //import javafx.geometry.Pos;
 import javax.swing.*;
 
-import static Chessbot2.Search.*;
 import static  Chessbot2.Chess.*;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
-import static Chessbot2.Chess.*;
+import java.util.ArrayList;
 
 public class Game {
 
@@ -31,17 +28,21 @@ public class Game {
 
     public void playerMove(Move move) {
         /* Forsøker å gjøre spillerens trekk.
-        Tar hvilken som helst streng som input,
-        og forsøker å oversette det til en tuppel før den sender det til Position og gjør trekket.
-        Returnerer true/false, basert på om den klarte å gjøre noe.
-        f. eks " \n  e2    e4sd jknsd bjsd\n" Blir oversatt til Tuple(85, 65), og returnerer true.
-        f. eks "ijnsdfhjb e2e4 sdkjn sdfjl sd jsd  sdjnsd " er uforståelig og returnerer false uten å bli gjort.
+        Deretter sjekker den om det er sjakk matt eller noe sånt, før den kaller på botmove til å svare.
          */
             currentBoard = currentBoard.move(move);
             paintPieces();
             madeMoves.add(currentBoard);
             spillerstur = false;
-            botMove();
+            currentBoard = currentBoard.rotate();
+            ArrayList<Move> botmoves = currentBoard.gen_moves();
+            Tuple<Boolean, ArrayList<Move>> check = checkCheckMate(botmoves);
+            if(check.getX() == null) System.out.println("Patt!"); 
+            else if(check.getX() == true) System.out.println("You win!");
+            else {
+                botmoves = check.getY();
+                botMove(botmoves);
+            }
     }
 
     public void back() {
@@ -56,19 +57,24 @@ public class Game {
             paintPieces();
         }else System.err.println("Can't go further back!");
     }
-    public void botMove(){
+    public void botMove(ArrayList<Move> botmoves){
         Move botmove;
         try {
             //Velger hvilken bot som skal brukes
-            currentBoard = currentBoard.rotate();
+            //currentBoard = currentBoard.rotate();
             if(findOkMove) botmove = Searcher.findOkMove(currentBoard);
-            else if(CalculateBestMove) botmove = Search.CalulateBestMove(currentBoard);
+            else if(CalculateBestMove) botmove = Search.CalulateBestMove(currentBoard, botmoves);
             else if(findRecursiveMove)botmove = Searcher.findRecursiveMove(currentBoard);
             else if(findFilthyMove) botmove = Searcher.findFilthyMove(currentBoard, 5);
             else botmove = Searcher.findRandomMove(currentBoard);
 
+            //Gjør trekket, og sjekker om det er matt eller noe sånt.
             currentBoard = currentBoard.move(botmove);
             currentBoard = currentBoard.rotate();
+            ArrayList<Move> playermoves = currentBoard.gen_moves();
+            Tuple<Boolean, ArrayList<Move>> check = checkCheckMate(playermoves);
+            if(check.getX() == null) System.out.println("Patt");
+            else if(check.getX()) System.out.println("You lose!");
             madeMoves.add(currentBoard);
             paintPieces();
             spillerstur = true;
@@ -79,6 +85,36 @@ public class Game {
             System.err.println("Botten fucket opp!");
             currentBoard = currentBoard.rotate();
             paintPieces();
+        }
+    }
+    public Tuple<Boolean, ArrayList<Move>> checkCheckMate(ArrayList<Move> moves) {
+        /* Sjekker om brettet er sjakk matt. Returnerer true om det er matt, null om det er patt/uavgjort, og false ellers.
+        I tillegg endrer den på listen over trekk den har som input, og returnerer kun listne over helt lovlige trekk.
+         */
+        ArrayList<Move> retmoves = new ArrayList<>();
+        for (Move move : moves) {
+            if (currentBoard.checkCheck(move)) {
+                retmoves.add(move);
+            }
+        }
+        if (retmoves.size() > 0)
+            return new Tuple(false, retmoves); //Om spilleren har mer enn 0 lovlige trekk, er det ikke matt, og spillet kan fortsette.
+        else {
+            Position copy = currentBoard.copy();
+            copy = copy.rotate();
+            int King = -1;
+            ArrayList<Move> botmoves = copy.gen_moves();
+            for (int i = 0; i < copy.getBoard().length(); i++) { //Finner hvor spillerens konge er.
+                if (copy.getBoard().charAt(i) == 'k') King = i;
+            }
+            if (King == -1) return new Tuple(true, retmoves);
+            for (int i = 0; i < botmoves.size(); i++) {
+                Move mellom = botmoves.get(i);
+                if (mellom.getY() == King) { //Om noen av motstanderens trekk ender med å ta kongen er det matt, og spillet avsluttes.
+                    return new Tuple(true, retmoves);
+                }
+            }
+            return new Tuple(null, retmoves); //Om det ikke er noen lovlige trekk tilgjengelig, og motstanderen likevel ikke truer kongen, blir det patt (/uavgjort).
         }
     }
 
@@ -149,7 +185,7 @@ public class Game {
 
     public void newGame(){
         madeMoves.clear();
-        currentBoard = new Position(initialboard, 0, initWC, initBC, 0, true, false);
+        currentBoard = new Position(initialboard, 0, initWC, initBC , 0, true, false);
         madeMoves.add(currentBoard);
         paintPieces();
         chooseBot();

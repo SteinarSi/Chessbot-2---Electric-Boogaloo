@@ -34,7 +34,7 @@ public class Position implements Comparable<Position> {
         this.botmove = botmove;
     }
 
-    public boolean check_player_move(Move move){
+    public boolean checkCheck(Move move){
         /* Den tredje og siste funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne sjekker om spilleren har noen brikker som kan flytte der,
         og dobbelsjekker at spilleren ikke har prøvd å sette seg selv i sjakk eller noe annet lurt.
@@ -51,7 +51,7 @@ public class Position implements Comparable<Position> {
             Position copy = copy();
             copy = copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det ville sett ut om spilleren hadde gjort det valgte trekket.
             copy = copy.rotate();
-            int King = 0;
+            int King = -1;
             ArrayList<Move> botmoves = copy.gen_moves();
             for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
                 if(copy.board.charAt(i) == 'k') King = i;
@@ -59,7 +59,6 @@ public class Position implements Comparable<Position> {
             for(int i=0; i<botmoves.size(); i++) {
                 Move mellom = botmoves.get(i);
                 if (mellom.getY() == King) {
-                    System.err.println("Don't put your king in check!");
                     return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
                 }
             }
