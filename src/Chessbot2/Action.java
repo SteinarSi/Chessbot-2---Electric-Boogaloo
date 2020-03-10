@@ -33,7 +33,7 @@ public class Action extends KeyAdapter implements ActionListener {
                     else {
                         if(IsAMove(usertext)){
                             Move move = parse(usertext);
-                            if(getCurrentBoard().check_player_move(move)){
+                            if(getCurrentBoard().checkCheck(move)){
                                 game.playerMove(move);
                             } else System.err.println("Not a legal move!");
                         } else System.err.println("Try typing a move on the format 'letter number letter number'");
@@ -52,7 +52,7 @@ public class Action extends KeyAdapter implements ActionListener {
             usertext = textField.getText();
             textField.setText("");
             Move move = parse(usertext);
-            if(getCurrentBoard().check_player_move(move)) game.playerMove(move);
+            if(getCurrentBoard().checkCheck(move)) game.playerMove(move);
             else System.err.println("Not a legal move!");
         }
         else if(Event.getSource() == back) game.back();
@@ -77,7 +77,7 @@ public class Action extends KeyAdapter implements ActionListener {
                     //Prøver å gjøre trekket.
                     if(pressedtuple.getY() != null){
                         Move move = new Move(pressedtuple.getX(), pressedtuple.getY()); //Konverterer tuppelen med knappinput til et Move.
-                        if(getCurrentBoard().check_player_move(move)){
+                        if(getCurrentBoard().checkCheck(move)){
                             game.playerMove(move);
                             pressedtuple.setX(pressedtuple.getY()); //Gjør at når du flytter en brikke, er den automatisk selektert til å bli flyttet i neste trekk.
                             pressedtuple.setY(null);

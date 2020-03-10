@@ -15,9 +15,9 @@ public class Search
     static int beta = 999999999;
     List<Position> moves = new ArrayList<>();//Already known moves
 
-    public static Move CalulateBestMove(Position board)
+    public static Move CalulateBestMove(Position board, ArrayList<Move> moves)
     {
-        List<Move> moves = board.gen_moves();
+        //List<Move> moves = board.gen_moves();
         Move[] moveArr = new Move[moves.size()];
 
         for (int i=0; i<moves.size(); i++)

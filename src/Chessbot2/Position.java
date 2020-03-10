@@ -34,7 +34,7 @@ public class Position implements Comparable<Position> {
         this.botmove = botmove;
     }
 
-    public boolean check_player_move(Move move){
+    public boolean checkCheck(Move move){
         /* Den tredje og siste funksjonen for å sjekke lovligheten til spillerens trekk.
         Denne sjekker om spilleren har noen brikker som kan flytte der,
         og dobbelsjekker at spilleren ikke har prøvd å sette seg selv i sjakk eller noe annet lurt.
@@ -51,7 +51,7 @@ public class Position implements Comparable<Position> {
             Position copy = copy();
             copy = copy.move(move); //Lager en kopi av brettet, og simulerer hvordan det ville sett ut om spilleren hadde gjort det valgte trekket.
             copy = copy.rotate();
-            int King = 0;
+            int King = -1;
             ArrayList<Move> botmoves = copy.gen_moves();
             for(int i=0; i<copy.board.length(); i++){ //Finner hvor spillerens konge er.
                 if(copy.board.charAt(i) == 'k') King = i;
@@ -59,7 +59,6 @@ public class Position implements Comparable<Position> {
             for(int i=0; i<botmoves.size(); i++) {
                 Move mellom = botmoves.get(i);
                 if (mellom.getY() == King) {
-                    System.err.println("Don't put your king in check!");
                     return false; //Sjekker om det er noen trekk motstanderen nå kan gjøre for å ta kongen.
                 }
             }
@@ -80,17 +79,17 @@ public class Position implements Comparable<Position> {
             }
             //Sjekker om rokering er lovlig, legger det til i listen
             if(this.black) {
-                if ((brikke == 'K' && this.BC.getX() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.')) {
+                if ((brikke == 'K' && BC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.')) {
                     lovligliste.add(new Move(94, 92));
                 }
-                if ((brikke == 'K' && this.BC.getY() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.' && board.charAt(fra +E + E + E) == '.')) {
+                if ((brikke == 'K' && BC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.' && board.charAt(fra +E + E + E) == '.')) {
                     lovligliste.add(new Move(94, 96));
                 }
             } else {
-                if ((brikke == 'K' && this.WC.getX() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
+                if ((brikke == 'K' && WC.getY() && board.charAt(fra + W) == '.' && board.charAt(fra + W + W) == '.') && board.charAt(fra + W + W + W) == '.') {
                     lovligliste.add(new Move(95, 93));
                 }
-                if ((brikke == 'K' && this.WC.getY() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
+                if ((brikke == 'K' && WC.getX() && board.charAt(fra + E) == '.' && board.charAt(fra + E + E) == '.')) {
                     lovligliste.add(new Move(95, 97));
                 }
             }
@@ -172,33 +171,43 @@ public class Position implements Comparable<Position> {
         if (this.black){
             if(fra == 98) retBC.setX(false);
             if(fra == 91) retBC.setY(false);
+            if(til == 21) retWC.setY(false);
+            if(til == 28) retWC.setX(false);
         } else{
             if(fra == 91) retWC.setX(false);
             if(fra == 98) retWC.setY(false);
+            if(til == 21) retBC.setX(false);
+            if(til == 28) retBC.setY(false);
         }
         //Rokerer
         if (brikke == 'K'){
-            if(black) retBC = new Tuple(false, false);
-            else retWC = new Tuple(false, false);
+            if(black) {
+                retBC.setY(false);
+                retBC.setX(false);
+            }
+            else {
+                retWC.setX(false);
+                retWC.setY(false);
+            }
 
             if(black){
-                if(til == 92){ //Flytter tårnet om du rokerer kort.
+                if(fra == 94 && til == 92){ //Flytter tårnet om du rokerer kort.
                     newScore += value(new Move(91, 93));
                     newboard.setCharAt(91, '.');
                     newboard.setCharAt(93, 'R');
                     newScore += 20;
-                }if(til == 96) { //Flytter tårnet om du rokerer langt.
+                }if(fra == 94 && til == 96) { //Flytter tårnet om du rokerer langt.
                     newScore += value(new Move(98, 95));
                     newboard.setCharAt(98, '.');
                     newboard.setCharAt(95, 'R');
                     newScore += 20;
                 }
             } else{
-                if(til == 93){ //Flytter tårnet om du rokerer langt.
+                if(fra == 95 && til == 93){ //Flytter tårnet om du rokerer langt.
                     newScore += value(new Move(91, 94));
                     newboard.setCharAt(91, '.');
                     newboard.setCharAt(94, 'R');
-                }if(til == 97) { //Flytter tårnet om du rokerer kort
+                }if(fra == 95 && til == 97) { //Flytter tårnet om du rokerer kort.
                     newScore += value(new Move(98, 96));
                     newboard.setCharAt(98, '.');
                     newboard.setCharAt(96, 'R');
@@ -208,7 +217,7 @@ public class Position implements Comparable<Position> {
         if(brikke == 'P') {
             if (til - fra == 2 * N) {
                 ep = 119 - (fra + N); //Lagrer hvor det er greit å ta en passant
-                TeP = 2; //Hvor mange trekk som kan gjøres før denne passenten ikke lenger er gyldig. TeP reduseres med 1 for hvert trekk.
+                TeP = 2; //Hvor mange trekk som kan gjøres før denne passenten ikke lenger er gyldig. TeP reduseres med 1 for hvert trekk (inkludert dette trekket).
             }
             if (til == ep) newboard.setCharAt(ep + S, '.'); //Drepper den passerte bonden i forbifarten
 
@@ -256,10 +265,8 @@ public class Position implements Comparable<Position> {
 
         int deltascore = 0;
 
-        if (brikke == '.') { // TODO: 05.03.2020 Fiks buggen som gjør at botten prøver å flytte et punktum.
+        if (brikke == '.') { // TODO: 05.03.2020 Jeg tror denne buggen skal være fikset nå. Slette denne om en ukes tid.
             System.err.println("Hva faen, brikken er et punktum???");
-            System.out.println(board);
-            System.out.println(move);
         }
         else deltascore = pst.get(brikke)[til] - pst.get(brikke)[fra];
 
