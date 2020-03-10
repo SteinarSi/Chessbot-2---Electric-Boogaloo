@@ -9,6 +9,7 @@ import java.util.*;
 
 public class Search
 {
+    static int i = 0;
     static int plies = 4;
     static int alpha = -999999999;
     static int beta = 999999999;
@@ -22,6 +23,7 @@ public class Search
         for (int i=0; i<moves.size(); i++)
         {
             try {
+
                 moves.get(i).addWeight(AlphaBeta(moves.get(i), plies, alpha, beta, false, board));
                 //System.out.println("Move: " + moves.get(i) + "Value: " + moves.get(i).getWeight());
             } catch (Exception e) {
@@ -30,15 +32,19 @@ public class Search
             }
 
             moveArr[i] = moves.get(i);
-        }
         
+        }
+        System.out.println(i);
+        i = 0;
         Arrays.sort(moveArr);//sort all the scores
         System.out.println("Old SCore: " + board.getScore());
         System.out.println("Current positions score: " + board.move(moveArr[moveArr.length - 1]).getScore() + ", Predicted score in " + plies +" turn: " + moveArr[moveArr.length - 1].getWeight());
         return moveArr[moveArr.length - 1];//return the best move
+        
     }
 
     public static int AlphaBeta(Move node, int n, int alpha, int beta, boolean isMaximizingPlayer, Position board) {
+        i++;
         int value;
         Position currPos = board.copy();
         Position tempPos;
